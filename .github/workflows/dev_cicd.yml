@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: 'lucaus2025Server'
-          path: $GITHUB_WORKSPACE/build/libs/**/*.jar  # 업로드 경로 수정
+          path: build/libs/*.jar
 
   deploy:
     needs: build
