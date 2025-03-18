@@ -1,11 +1,79 @@
 name: lucaus_dev_cicd
 
 on:
-  pull_request:
-    types: [closed]
-  workflow_dispatch:
+  push:
+    branches: [ develop ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'dev'
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Create application.yml
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/src/main/resources
+          echo "${{ secrets.APPLICATION_YML }}" > $GITHUB_WORKSPACE/src/main/resources/application.yml
+        shell: bash
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x $GITHUB_WORKSPACE/gradlew
+
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'lucaus2025Server'
+          path: $GITHUB_WORKSPACE/build/libs/*.jar
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: 'lucaus2025Server'
+          path: build/libs/
+
+      - name: Deploy to EC2
+        env:
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+        run: |
+          echo "$EC2_SSH_KEY" > private_key.pem
+          chmod 600 private_key.pem
+
+          jar_file=$(find build/libs -name '*.jar' ! -name '*plain.jar' | head -n 1)
+
+          scp -i private_key.pem -o StrictHostKeyChecking=no "$jar_file" $EC2_USERNAME@$EC2_HOST:/home/$EC2_USERNAME/LUCAUS-server/build/libs/lucaus2025Server.jar
+
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST << 'EOF'
+            PID=$(pgrep -f lucaus2025Server.jar)
+            if [ ! -z "$PID" ]; then
+              echo "Stopping existing server process: $PID"
+              kill -15 $PID
+              while kill -0 $PID 2>/dev/null; do
+                echo "Waiting for process to stop..."
+                sleep 2
+              done
+            fi
+
+            echo "Starting new server..."
+            nohup java -jar /home/$EC2_USERNAME/LUCAUS-server/build/libs/lucaus2025Server.jar > /home/$EC2_USERNAME/LUCAUS-server/app.log 2>&1 &
+          EOF
+
+          rm -f private_key.pem
