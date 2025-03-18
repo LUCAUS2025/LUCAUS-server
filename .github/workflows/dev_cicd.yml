@@ -2,7 +2,7 @@ name: lucaus_dev_cicd
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ feat/cicd ]
 
 jobs:
   build:
@@ -27,9 +27,9 @@ jobs:
         run: chmod +x $GITHUB_WORKSPACE/gradlew
 
       - name: Build with Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: build
+        run: |
+          ./gradlew build
+          ls -l $GITHUB_WORKSPACE/build/libs/
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
