@@ -2,14 +2,14 @@ name: lucaus_dev_cicd
 
 on:
   push:
-    branches: [ feat/cicd ]
+    branches: [ dev ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3  # 저장소 코드 체크아웃
+      - uses: actions/checkout@v3
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -18,7 +18,7 @@ jobs:
           java-version: '17'
 
       - name: Print Current Directory
-        run: pwd  # 현재 디렉토리 확인
+        run: pwd
 
       - name: Create application.yml
         run: |
