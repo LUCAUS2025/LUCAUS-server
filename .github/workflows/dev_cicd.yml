@@ -34,7 +34,7 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: 'lucaus2025Server'
+          name: 'lucausServer'
           path: $GITHUB_WORKSPACE/build/libs/*.jar
 
   deploy:
@@ -45,8 +45,8 @@ jobs:
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
-          name: 'lucaus2025Server'
-          path: $GITHUB_WORKSPACE/build/libs/
+          name: 'lucausServer'
+          path: build/libs/
 
       - name: Deploy to EC2
         env:
