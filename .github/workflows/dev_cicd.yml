@@ -46,7 +46,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: 'lucaus2025Server'
-          path: build/libs/
+          path: $GITHUB_WORKSPACE/build/libs/
 
       - name: Deploy to EC2
         env:
