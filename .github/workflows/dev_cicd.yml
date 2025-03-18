@@ -17,6 +17,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Print Current Directory
+        run: pwd
+
       - name: Create application.yml
         run: |
           mkdir -p $GITHUB_WORKSPACE/src/main/resources
@@ -26,16 +29,17 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x $GITHUB_WORKSPACE/gradlew
 
-      - name: Build with Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: build
+      - name: Build with Gradle (Debug Mode)
+        run: |
+          ./gradlew build --stacktrace --info
+          echo "Listing build/libs/ directory:"
+          ls -l $GITHUB_WORKSPACE/build/libs/
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: 'lucaus2025Server'
-          path: $GITHUB_WORKSPACE/build/libs/*.jar
+          path: build/libs/*.jar
 
   deploy:
     needs: build
@@ -71,7 +75,6 @@ jobs:
                 sleep 2
               done
             fi
-
             echo "Starting new server..."
             nohup java -jar /home/$EC2_USERNAME/LUCAUS-server/build/libs/lucaus2025Server.jar > /home/$EC2_USERNAME/LUCAUS-server/app.log 2>&1 &
           EOF
