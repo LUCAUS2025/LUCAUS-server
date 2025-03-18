@@ -32,7 +32,7 @@ jobs:
           arguments: build
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: 'lucaus2025Server'
           path: $GITHUB_WORKSPACE/build/libs/*.jar
