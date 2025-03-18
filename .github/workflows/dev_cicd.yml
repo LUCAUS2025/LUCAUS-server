@@ -60,23 +60,11 @@ jobs:
         run: |
           echo "$EC2_SSH_KEY" > private_key.pem
           chmod 600 private_key.pem
-
           jar_file=$(find build/libs -name '*.jar' ! -name '*plain.jar' | head -n 1)
-
-          scp -i private_key.pem -o StrictHostKeyChecking=no "$jar_file" $EC2_USERNAME@$EC2_HOST:/home/$EC2_USERNAME/LUCAUS-server/build/libs/lucaus2025Server.jar
-
-          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST << 'EOF'
-            PID=$(pgrep -f lucaus2025Server.jar)
-            if [ ! -z "$PID" ]; then
-              echo "Stopping existing server process: $PID"
-              kill -15 $PID
-              while kill -0 $PID 2>/dev/null; do
-                echo "Waiting for process to stop..."
-                sleep 2
-              done
-            fi
-            echo "Starting new server..."
-            nohup java -jar /home/$EC2_USERNAME/LUCAUS-server/build/libs/lucaus2025Server.jar > /home/$EC2_USERNAME/LUCAUS-server/app.log 2>&1 &
-          EOF
-
+          scp -i private_key.pem -o StrictHostKeyChecking=no "$jar_file" $EC2_USERNAME@$EC2_HOST:/home/$EC2_USERNAME/lucaus2025Server.jar
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST "
+            pgrep java | xargs -r kill -15
+            sleep 10
+            nohup java -jar /home/$EC2_USERNAME/lucaus2025Server.jar > app.log 2>&1 &
+          "
           rm -f private_key.pem
