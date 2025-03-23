@@ -2,6 +2,7 @@ package com.likelion13.lucaus_api.service;
 
 import com.likelion13.lucaus_api.domain.entity.LostItems;
 import com.likelion13.lucaus_api.domain.repository.LostItemsRepository;
+import com.likelion13.lucaus_api.dto.response.LostItemsResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
@@ -21,7 +22,8 @@ public class LostItemsService {
     private LostItemsRepository lostItemsRepository;
 
     @Transactional(readOnly = true)
-    public Page<LostItems> getLostItems(String category, String date, int page, int size) {
+    public Page<LostItemsResponseDto> getLostItems(String category, String date, int page, int size) {
+
         Pageable pageable = PageRequest.of(page - 1, size);
 
         LocalDate parsedDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
@@ -35,8 +37,18 @@ public class LostItemsService {
             throw new IllegalArgumentException("Invalid category: " + category);
         }
 
-        return lostItemsRepository.findByCategoryAndUpdatedDateTimeBetween(categoryEnum, startOfDay, endOfDay, pageable);
+        Page<LostItems> lostItemsPage = lostItemsRepository.findByCategoryAndUpdatedDateTimeBetween(categoryEnum, startOfDay, endOfDay, pageable);
+
+        return lostItemsPage.map(lostItem -> {
+            LostItemsResponseDto responseDto = new LostItemsResponseDto();
+            responseDto.setId(lostItem.getId());
+            responseDto.setUpdatedDateTime(lostItem.getUpdatedDateTime().toString());
+            responseDto.setPlace(lostItem.getPlace());
+            responseDto.setName(lostItem.getName());
+            responseDto.setPhotoUrl(lostItem.getPhotoUrl());
+            responseDto.setCategory(lostItem.getCategory());
+            responseDto.setOwnerFound(lostItem.isOwnerFound());
+            return responseDto;
+        });
     }
 }
-
-

@@ -1,6 +1,5 @@
 package com.likelion13.lucaus_api.controller;
 
-import com.likelion13.lucaus_api.domain.entity.LostItems;
 import com.likelion13.lucaus_api.dto.response.LostItemsResponseDto;
 import com.likelion13.lucaus_api.service.LostItemsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +22,7 @@ public class LostItemsController {
             @RequestParam(defaultValue = "10") int size) {
 
         try {
-            Page<LostItems> lostItemsPage = lostItemsService.getLostItems(category, date, page, size);
-
-            Page<LostItemsResponseDto> responseDtoPage = lostItemsPage.map(lostItem -> {
-                LostItemsResponseDto responseDto = new LostItemsResponseDto();
-                responseDto.setId(lostItem.getId());
-                responseDto.setUpdatedDateTime(lostItem.getUpdatedDateTime().toString());
-                responseDto.setPlace(lostItem.getPlace());
-                responseDto.setName(lostItem.getName());
-                responseDto.setPhotoUrl(lostItem.getPhotoUrl());
-                responseDto.setCategory(lostItem.getCategory());
-                responseDto.setOwnerFound(lostItem.isOwnerFound());
-                return responseDto;
-            });
+            Page<LostItemsResponseDto> responseDtoPage = lostItemsService.getLostItems(category, date, page, size);
 
             return ApiResponse.onSuccess(responseDtoPage);
 
@@ -44,5 +31,4 @@ public class LostItemsController {
         }
     }
 }
-
 
