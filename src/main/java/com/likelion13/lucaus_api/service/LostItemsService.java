@@ -4,6 +4,7 @@ import com.likelion13.lucaus_api.domain.entity.LostItems;
 import com.likelion13.lucaus_api.domain.repository.LostItemsRepository;
 import com.likelion13.lucaus_api.dto.response.LostItemsResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +23,11 @@ public class LostItemsService {
     private LostItemsRepository lostItemsRepository;
 
     @Transactional(readOnly = true)
+    @Cacheable(
+            value = "lost_10min",
+            key = "#category + '-' + #date + '-' + #page + '-' + #size",
+            condition = "#category != null && #date != null && #page > 0 && #size > 0"
+    )
     public Page<LostItemsResponseDto> getLostItems(String category, String date, int page, int size) {
 
         Pageable pageable = PageRequest.of(page - 1, size);
