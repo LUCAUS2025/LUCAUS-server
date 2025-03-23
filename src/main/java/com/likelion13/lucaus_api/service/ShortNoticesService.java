@@ -4,6 +4,7 @@ import com.likelion13.lucaus_api.domain.entity.ShortNotices;
 import com.likelion13.lucaus_api.domain.repository.ShortNoticesRepository;
 import com.likelion13.lucaus_api.dto.response.ShortNoticesResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class ShortNoticesService {
     @Autowired
     private ShortNoticesRepository shortNoticesRepository;
 
+    @Cacheable(value = "short_1min", key = "'visibleShortNotices'")
     public List<ShortNoticesResponseDto> getVisibleShortNotices() {
         List<ShortNotices> shortNoticesList = shortNoticesRepository.findByIsVisibleTrue();
 
