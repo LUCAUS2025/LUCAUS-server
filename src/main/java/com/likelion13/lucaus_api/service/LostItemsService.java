@@ -14,8 +14,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import com.likelion13.lucaus_api.domain.entity.LostItems.Category;
-
-
 @Service
 public class LostItemsService {
 
@@ -36,14 +34,19 @@ public class LostItemsService {
         LocalDateTime startOfDay = parsedDate.atStartOfDay();
         LocalDateTime endOfDay = parsedDate.atTime(23, 59, 59, 999999999);
 
-        Category categoryEnum;
-        try {
-            categoryEnum = Category.valueOf(category.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid category: " + category);
-        }
+        Page<LostItems> lostItemsPage;
+        if ("TOTAL".equalsIgnoreCase(category)) {
+            lostItemsPage = lostItemsRepository.findByUpdatedDateTimeBetween(startOfDay, endOfDay, pageable);
+        } else {
+            Category categoryEnum;
+            try {
+                categoryEnum = Category.valueOf(category.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid category: " + category);
+            }
 
-        Page<LostItems> lostItemsPage = lostItemsRepository.findByCategoryAndUpdatedDateTimeBetween(categoryEnum, startOfDay, endOfDay, pageable);
+            lostItemsPage = lostItemsRepository.findByCategoryAndUpdatedDateTimeBetween(categoryEnum, startOfDay, endOfDay, pageable);
+        }
 
         return lostItemsPage.map(lostItem -> {
             LostItemsResponseDto responseDto = new LostItemsResponseDto();

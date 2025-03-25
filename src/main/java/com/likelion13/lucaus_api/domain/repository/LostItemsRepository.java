@@ -11,4 +11,6 @@ public interface LostItemsRepository extends JpaRepository<LostItems, Long> {
 
     Page<LostItems> findByCategoryAndUpdatedDateTimeBetween(
             Category category, LocalDateTime startOfDay, LocalDateTime endOfDay, Pageable pageable);
+
+            Page<LostItems> findByUpdatedDateTimeBetween(LocalDateTime start, LocalDateTime end, Pageable pageable);
 }
