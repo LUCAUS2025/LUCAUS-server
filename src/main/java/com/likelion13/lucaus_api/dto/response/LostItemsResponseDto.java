@@ -6,9 +6,13 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
-public class LostItemsResponseDto {
+public class LostItemsResponseDto implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private Long id;
     private String updatedDateTime;
     private String place;
