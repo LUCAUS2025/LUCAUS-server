@@ -1,5 +1,7 @@
 package com.likelion13.lucaus_api.service;
 
+import com.likelion13.lucaus_api.common.exception.ErrorCode;
+import com.likelion13.lucaus_api.common.exception.GeneralHandler;
 import com.likelion13.lucaus_api.domain.entity.DetailedNotices;
 import com.likelion13.lucaus_api.domain.repository.DetailedNoticesRepository;
 import com.likelion13.lucaus_api.dto.response.DetailedNoticesResponseDto;
@@ -28,6 +30,12 @@ public class DetailedNoticesService {
             condition = "#page > 0 && #size > 0"
     )
     public Page<DetailedNoticesResponseDto> getNotices(int page, int size) {
+
+        if (page <= 0 || size <= 0) {
+//            throw new GeneralHandler(ErrorCode._BAD_REQUEST,"페이지와 사이즈는 1 이상의 값이어야 합니다.");
+            throw new GeneralHandler(ErrorCode._BAD_REQUEST);
+        }
+
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<DetailedNotices> noticesPage = detailedNoticesRepository.findAll(pageable);
 
