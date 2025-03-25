@@ -18,8 +18,8 @@ public enum ErrorCode implements BaseErrorCode {
     private final String message;
 
     @Override
-    public ErrorReasonDTO getReason() {
-        return ErrorReasonDTO.builder()
+    public ErrorReasonDto getReason() {
+        return ErrorReasonDto.builder()
                 .message(message)
                 .code(code)
                 .isSuccess(false)
@@ -27,8 +27,8 @@ public enum ErrorCode implements BaseErrorCode {
     }
 
     @Override
-    public ErrorReasonDTO getReasonHttpStatus() {
-        return ErrorReasonDTO.builder()
+    public ErrorReasonDto getReasonHttpStatus() {
+        return ErrorReasonDto.builder()
                 .message(message)
                 .code(code)
                 .isSuccess(false)
