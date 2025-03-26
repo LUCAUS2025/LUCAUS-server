@@ -471,5 +471,83 @@ public class NotionService {
             lostItemsRepository.save(lostItemEntity);
         }
     }
+    public Pair<String, String> handleNotionPhotoUrl(String notionPhotoUrl, Optional<?> existingItem) {
+        String photoUrl = null;
+
+        if (existingItem.isPresent()) {
+            if (existingItem.get() instanceof LostItems) {
+                LostItems existingLostItem = (LostItems) existingItem.get();
+                String existingNotionPhotoUrl = existingLostItem.getNotionPhotoUrl();
+
+                // 기존 LostItems에 대한 처리
+                if (existingNotionPhotoUrl != null && notionPhotoUrl != null && existingNotionPhotoUrl.length() >= 200 &&
+                        existingNotionPhotoUrl.substring(0, 200).equals(notionPhotoUrl.substring(0, 200))) {
+                    notionPhotoUrl = existingNotionPhotoUrl;
+                    photoUrl = existingLostItem.getPhotoUrl();
+                } else {
+                    if (existingLostItem.getUpdatedDateTime().plusHours(1).isAfter(LocalDateTime.now())) {
+                        try {
+                            photoUrl = s3Service.downloadAndUploadImage(notionPhotoUrl, "lost");
+                            if (notionPhotoUrl != null && notionPhotoUrl.length() > 200) {
+                                notionPhotoUrl = notionPhotoUrl.substring(0, 200);
+                            }
+                        } catch (IOException e) {
+                            photoUrl = existingNotionPhotoUrl;
+                            if (notionPhotoUrl != null && notionPhotoUrl.length() > 200) {
+                                notionPhotoUrl = notionPhotoUrl.substring(0, 200);
+                            }
+                        }
+                    } else {
+                        notionPhotoUrl = existingNotionPhotoUrl;
+                        photoUrl = existingLostItem.getPhotoUrl();
+                    }
+                }
+            } else if (existingItem.get() instanceof DetailedNotices) {
+                DetailedNotices existingDetailedNotice = (DetailedNotices) existingItem.get();
+                String existingNotionPhotoUrl = existingDetailedNotice.getNotionPhotoUrl();
+
+                if (existingNotionPhotoUrl != null && notionPhotoUrl != null && existingNotionPhotoUrl.length() >= 200 &&
+                        existingNotionPhotoUrl.substring(0, 200).equals(notionPhotoUrl.substring(0, 200))) {
+                    notionPhotoUrl = existingNotionPhotoUrl;
+                    photoUrl = existingDetailedNotice.getPhotoUrl();
+                } else {
+                    if (existingDetailedNotice.getUploadDateTime().plusHours(1).isAfter(LocalDateTime.now())) {
+                        try {
+                            photoUrl = s3Service.downloadAndUploadImage(notionPhotoUrl, "lost");
+                            if (notionPhotoUrl != null && notionPhotoUrl.length() > 200) {
+                                notionPhotoUrl = notionPhotoUrl.substring(0, 200);
+                            }
+                        } catch (IOException e) {
+                            photoUrl = existingNotionPhotoUrl;
+                            if (notionPhotoUrl != null && notionPhotoUrl.length() > 200) {
+                                notionPhotoUrl = notionPhotoUrl.substring(0, 200);
+                            }
+                        }
+                    } else {
+                        notionPhotoUrl = existingNotionPhotoUrl;
+                        photoUrl = existingDetailedNotice.getPhotoUrl();
+                    }
+                }
+            }
+        } else {
+            try {
+                photoUrl = s3Service.downloadAndUploadImage(notionPhotoUrl, "lost");
+                if (notionPhotoUrl != null && notionPhotoUrl.length() > 200) {
+                    notionPhotoUrl = notionPhotoUrl.substring(0, 200);
+                }
+            } catch (IOException e) {
+                logger.error("이미지 다운로드 및 업로드 중 오류 발생", e);
+            }
+        }
+        if (notionPhotoUrl == null) {
+            notionPhotoUrl = "";  // 기본 값 설정
+        }
+        if (photoUrl == null) {
+            photoUrl = "";  // 기본 값 설정
+        }
+
+        return Pair.of(notionPhotoUrl, photoUrl);
+    }
+
 
 }
