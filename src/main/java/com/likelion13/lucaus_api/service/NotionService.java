@@ -357,6 +357,119 @@ public class NotionService {
     }
 
 
+    //     ShortNotice 데이터를 주기적으로 가져오는 메서드
+    @Scheduled(cron = "0 0 0 * * *")
 
+//    @Scheduled(cron = "0 * * * * *")
+    public void fetchShortNotices() {
+        List<ShortNoticeDto> shortNotices = fetchNotionDataFromDatabaseId(notionConfig.getShortNoticesDbId(), ShortNoticeDto.class);
+
+        for (ShortNoticeDto shortNoticeDto : shortNotices) {
+            Optional<ShortNotices> existingShortNotice = shortNoticesRepository.findByNotionId(shortNoticeDto.getNotionId());
+
+            ShortNotices shortNoticesEntity;
+
+            if (existingShortNotice.isPresent()) {
+                shortNoticesEntity = existingShortNotice.get();
+                shortNoticesEntity.changeInfo(shortNoticeDto.getInfo());
+                shortNoticesEntity.changeIsVisible(shortNoticeDto.isVisible());
+            } else {
+                shortNoticesEntity = ShortNotices.builder()
+                        .info(shortNoticeDto.getInfo())
+                        .isVisible(shortNoticeDto.isVisible())
+                        .uploadDateTime(shortNoticeDto.getUploadDateTime())
+                        .notionId(shortNoticeDto.getNotionId())
+                        .build();
+            }
+
+            shortNoticesRepository.save(shortNoticesEntity);
+        }
+    }
+
+
+    // DetailedNotice 데이터를 주기적으로 가져오는 메서드
+    @Scheduled(cron = "0 0 0 * * *")
+//    @Scheduled(cron = "0 * * * * *")
+    public void fetchDetailedNotices() {
+
+        List<DetailedNoticeDto> detailedNotices = fetchNotionDataFromDatabaseId(notionConfig.getDetailedNoticesDbId(), DetailedNoticeDto.class);
+
+        for (DetailedNoticeDto detailedNoticeDto : detailedNotices) {
+            Optional<DetailedNotices> existingDetailedNotice = detailedNoticesRepository.findByNotionId(detailedNoticeDto.getNotionId());
+
+            DetailedNotices detailedNoticesEntity;
+
+            if (existingDetailedNotice.isPresent()) {
+                detailedNoticesEntity = existingDetailedNotice.get();
+                detailedNoticesEntity.changeCategory(detailedNoticeDto.getCategory());
+                detailedNoticesEntity.changeTitle(detailedNoticeDto.getTitle());
+                detailedNoticesEntity.changeContent(detailedNoticeDto.getContent());
+                detailedNoticesEntity.changePhotoUrl(detailedNoticeDto.getPhotoUrl());
+                detailedNoticesEntity.changeNotionPhotoUrl(detailedNoticeDto.getNotionPhotoUrl());
+            } else {
+
+                detailedNoticesEntity = DetailedNotices.builder()
+                        .category(detailedNoticeDto.getCategory())
+                        .title(detailedNoticeDto.getTitle())
+                        .content(detailedNoticeDto.getContent())
+                        .photoUrl(detailedNoticeDto.getPhotoUrl())
+                        .notionId(detailedNoticeDto.getNotionId())
+                        .notionPhotoUrl(detailedNoticeDto.getNotionPhotoUrl())
+                        .uploadDateTime(detailedNoticeDto.getUploadDateTime())
+                        .build();
+            }
+
+            detailedNoticesRepository.save(detailedNoticesEntity);
+        }
+    }
+
+
+    // LostItem 데이터를 주기적으로 가져오는 메서드
+    @Scheduled(cron = "0 0 0 * * *")
+//@Scheduled(cron = "0 * * * * *")
+    public void fetchLostItems() {
+        List<LostItemDto> lostItems = fetchNotionDataFromDatabaseId(notionConfig.getLostItemsDbId(), LostItemDto.class);
+
+        for (LostItemDto lostItemDto : lostItems) {
+            Optional<LostItems> existingLostItem = lostItemsRepository.findByNotionId(lostItemDto.getNotionId());
+
+            LostItems lostItemEntity;
+
+            String category = lostItemDto.getCategory();
+            LostItems.Category categoryEnum = LostItems.Category.OTHERS; // 기본값 설정
+
+            if (category != null) {
+                try {
+                    // 대문자로 변환 후 enum 값으로 변환
+                    categoryEnum = LostItems.Category.valueOf(category.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    categoryEnum = LostItems.Category.OTHERS;
+                }
+            }
+
+            if (existingLostItem.isPresent()) {
+                lostItemEntity = existingLostItem.get();
+                lostItemEntity.changePlace(lostItemDto.getPlace());
+                lostItemEntity.changeName(lostItemDto.getName());
+                lostItemEntity.changePhotoUrl(lostItemDto.getPhotoUrl());
+                lostItemEntity.changeNotionPhotoUrl(lostItemDto.getNotionPhotoUrl());
+                lostItemEntity.changeCategory(categoryEnum);
+                lostItemEntity.changeOwnerFound(lostItemDto.isOwnerFound());
+            } else {
+                lostItemEntity = LostItems.builder()
+                        .updatedDateTime(lostItemDto.getUpdatedDateTime())
+                        .place(lostItemDto.getPlace())
+                        .name(lostItemDto.getName())
+                        .photoUrl(lostItemDto.getPhotoUrl())
+                        .notionPhotoUrl(lostItemDto.getNotionPhotoUrl())
+                        .category(categoryEnum)
+                        .ownerFound(lostItemDto.isOwnerFound())
+                        .notionId(lostItemDto.getNotionId())
+                        .build();
+            }
+
+            lostItemsRepository.save(lostItemEntity);
+        }
+    }
 
 }
