@@ -103,5 +103,260 @@ public class NotionService {
         }
     }
 
+    private ShortNoticeDto mapToShortNoticeDto(JSONObject page) {
+        JSONObject properties = page.optJSONObject("properties");
+
+        JSONObject visibility = properties.optJSONObject("노출 여부");
+        String visibilityName = visibility != null ? visibility.optJSONObject("select").optString("name") : null;
+
+        JSONObject noticeText = properties.optJSONObject("안내글");
+        String noticePlainText = null;
+        if (noticeText != null) {
+            JSONArray titleArray = noticeText.optJSONArray("title");
+            if (titleArray != null && titleArray.length() > 0) {
+                noticePlainText = titleArray.optJSONObject(0)
+                        .optJSONObject("text")
+                        .optString("content");
+            }
+        }
+
+        String createdTimeString = page.optString("created_time");
+        LocalDateTime createdTime = null;
+        if (createdTimeString != null && !createdTimeString.isEmpty()) {
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+                createdTime = LocalDateTime.parse(createdTimeString, formatter);
+            } catch (Exception e) {
+                logger.error("Failed to parse created_time: {}", createdTimeString, e);
+            }
+        }
+        String notionId = page.optString("id");
+
+        return ShortNoticeDto.builder()
+                .info(noticePlainText)
+                .isVisible("True".equals(visibilityName))
+                .uploadDateTime(createdTime)
+                .notionId(notionId)
+                .build();
+    }
+
+
+    private DetailedNoticeDto mapToDetailedNoticeDto(JSONObject page) {
+        String uploadDateTimeString = page.optString("created_time");
+
+        LocalDateTime uploadDateTime = null;
+        if (uploadDateTimeString != null && !uploadDateTimeString.isEmpty()) {
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+                uploadDateTime = LocalDateTime.parse(uploadDateTimeString, formatter);
+            } catch (Exception e) {
+                logger.error("Failed to parse created_time: {}", uploadDateTimeString, e);
+            }
+        }
+
+        JSONObject properties = page.optJSONObject("properties");
+        String category = null;
+        if (properties != null) {
+            JSONObject categoryObj = properties.optJSONObject("카테고리");
+            if (categoryObj != null) {
+                JSONArray categoryTextArray = categoryObj.optJSONArray("rich_text");
+                if (categoryTextArray != null && categoryTextArray.length() > 0) {
+                    category = categoryTextArray.optJSONObject(0)
+                            .optJSONObject("text")
+                            .optString("content");
+                }
+            }
+        }
+
+        String title = null;
+        if (properties != null) {
+            JSONObject titleObj = properties.optJSONObject("제목");
+            if (titleObj != null) {
+                JSONArray titleTextArray = titleObj.optJSONArray("text");
+                if (titleTextArray != null && titleTextArray.length() > 0) {
+                    JSONObject firstTextObj = titleTextArray.optJSONObject(0);
+                    if (firstTextObj != null) {
+                        title = firstTextObj.optString("plain_text");
+                    }
+                }
+            }
+        }
+
+        StringBuilder contentBuilder = new StringBuilder();
+        if (properties != null) {
+            JSONObject contentObj = properties.optJSONObject("내용");
+            if (contentObj != null) {
+                JSONArray contentTextArray = contentObj.optJSONArray("rich_text");
+                if (contentTextArray != null) {
+                    for (int i = 0; i < contentTextArray.length(); i++) {
+                        JSONObject contentTextObj = contentTextArray.optJSONObject(i);
+                        if (contentTextObj != null) {
+                            String contentText = contentTextObj.optJSONObject("text").optString("content");
+                            contentBuilder.append(contentText).append("\n");
+                        }
+                    }
+                }
+            }
+        }
+        String content = contentBuilder.toString().trim();
+
+        String photoUrl = null;
+        JSONObject photoObj = properties.optJSONObject("사진");
+        if (photoObj != null) {
+
+            JSONArray filesArray = photoObj.optJSONArray("files");
+            if (filesArray != null && filesArray.length() > 0) {
+
+                JSONObject fileObj = filesArray.optJSONObject(0);
+                if (fileObj != null) {
+
+                    JSONObject file = fileObj.optJSONObject("file");
+                    JSONObject file2 = fileObj.optJSONObject("external");
+
+                    if (file != null) {
+                        photoUrl = file.optString("url");
+                    }
+                    else if(file2 != null){
+                        photoUrl = file2.optString("url");
+                    }
+                }
+            }
+        }
+
+
+
+        String notionId = page.optString("id");
+
+        Optional<DetailedNotices> existingDetailNotice = detailedNoticesRepository.findByNotionId(notionId);
+        Pair<String, String> result = Pair.of("", "");
+
+        if (photoUrl == null) {
+            result = Pair.of("", "");
+        } else {
+            result = handleNotionPhotoUrl(photoUrl, existingDetailNotice);
+        }
+
+        return DetailedNoticeDto.builder()
+                .notionId(notionId)
+                .category(category)
+                .title(title)
+                .content(content)
+                .photoUrl(result.getSecond())
+                .notionPhotoUrl(result.getFirst())
+                .uploadDateTime(uploadDateTime)
+                .build();
+    }
+
+    private LostItemDto mapToLostItemDto(JSONObject page) {
+        JSONObject properties = page.optJSONObject("properties");
+
+        String notionId = page.optString("id");
+
+        String updatedTimeString = page.optString("created_time");
+        LocalDateTime updatedDateTime = null;
+        if (updatedTimeString != null && !updatedTimeString.isEmpty()) {
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+                updatedDateTime = LocalDateTime.parse(updatedTimeString, formatter);
+            } catch (Exception e) {
+                logger.error("Failed to parse created_time: {}", updatedTimeString, e);
+            }
+        }
+
+        String category = "OTHERS";
+        JSONObject categoryObj = properties.optJSONObject("카테고리");
+        if (categoryObj != null) {
+            JSONObject select = categoryObj.optJSONObject("select");
+            if (select != null) {
+                String categoryName = select.optString("name", "").toUpperCase();
+                switch (categoryName) {
+                    case "기타":
+                        category = "OTHERS";
+                        break;
+                    case "화장품":
+                        category = "COSMETICS";
+                        break;
+                    case "전자기기":
+                        category = "ELECTRONICS";
+                        break;
+                    case "의류":
+                        category = "CLOTHING";
+                        break;
+                    case "지갑/카드":
+                        category = "WALLET_CARD";
+                        break;
+                }
+            }
+        }
+
+        String place = null;
+        JSONObject placeObj = properties.optJSONObject("습득장소");
+        if (placeObj != null) {
+            JSONArray richTextArray = placeObj.optJSONArray("rich_text");
+            if (richTextArray != null && richTextArray.length() > 0) {
+                place = richTextArray.optJSONObject(0).optJSONObject("text").optString("content");
+            }
+        }
+
+        boolean ownerFound = false;
+        JSONObject ownerFoundObj = properties.optJSONObject("주인 찾음");
+        if (ownerFoundObj != null) {
+            JSONObject selectObj = ownerFoundObj.optJSONObject("select");
+            if (selectObj != null) {
+                String ownerFoundStatus = selectObj.optString("name");
+                ownerFound = "주인 찾음".equals(ownerFoundStatus);  // "주인 찾음"이면 true
+            }
+        }
+
+        String name = null;
+        JSONObject nameObj = properties.optJSONObject("물품명");
+        if (nameObj != null) {
+            JSONArray titleArray = nameObj.optJSONArray("title");
+            if (titleArray != null && titleArray.length() > 0) {
+                name = titleArray.optJSONObject(0).optJSONObject("text").optString("content");
+            }
+        }
+
+        String photoUrl = null;
+        JSONObject photoObj = properties.optJSONObject("사진");
+        if (photoObj != null) {
+            JSONArray filesArray = photoObj.optJSONArray("files");
+            if (filesArray != null && filesArray.length() > 0) {
+                JSONObject fileObj = filesArray.optJSONObject(0);
+                if (fileObj != null) {
+                    JSONObject file = fileObj.optJSONObject("file");
+                    if (file != null) {
+                        photoUrl = file.optString("url");
+                    }
+                }
+            }
+        }
+
+        Optional<LostItems> existingLostItem = lostItemsRepository.findByNotionId(notionId);
+
+
+        Pair<String, String> result = Pair.of("", "");
+
+        if (photoUrl == null) {
+            result = Pair.of("", "");
+        } else {
+            String notionPhotoUrl = photoUrl;
+            result = handleNotionPhotoUrl(notionPhotoUrl, existingLostItem);
+        }
+
+        return LostItemDto.builder()
+                .notionId(notionId)
+                .updatedDateTime(updatedDateTime)
+                .category(category)
+                .place(place)
+                .photoUrl(result.getSecond())
+                .ownerFound(ownerFound)
+                .name(name)
+                .notionPhotoUrl(result.getFirst())
+                .build();
+    }
+
+
+
 
 }
