@@ -14,6 +14,7 @@ public class LostItems {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String notionId;
     private LocalDateTime updatedDateTime;
     private String place;
     private String name;
@@ -23,5 +24,24 @@ public class LostItems {
     private boolean ownerFound;
     public enum Category {
         COSMETICS, ELECTRONICS, CLOTHING, WALLET_CARD, OTHERS
+    }
+    public void changePlace(String place) {
+        this.place = place;
+    }
+
+    public void changeName(String name) {
+        this.name = name;
+    }
+
+    public void changePhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    public void changeCategory(Category category) {
+        this.category = category;
+    }
+
+    public void changeOwnerFound(boolean ownerFound) {
+        this.ownerFound = ownerFound;
     }
 }

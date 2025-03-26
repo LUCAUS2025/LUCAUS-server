@@ -14,6 +14,7 @@ public class DetailedNotices {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String notionId;
     private String category;
     private String title;
 
