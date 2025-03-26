@@ -17,6 +17,7 @@ public class LostItemDto {
     private String place;
     private String name;
     private String photoUrl;
+    private String notionPhotoUrl;
     private String category;
     private boolean ownerFound;
 

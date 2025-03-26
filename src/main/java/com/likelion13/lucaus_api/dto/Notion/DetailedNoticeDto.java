@@ -16,6 +16,7 @@ public class DetailedNoticeDto {
     private String content;
     private String photoUrl;
     private LocalDateTime uploadDateTime;
+    private String notionPhotoUrl;
     private String notionId;
 
     @Override

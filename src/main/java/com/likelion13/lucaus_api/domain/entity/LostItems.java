@@ -19,6 +19,7 @@ public class LostItems {
     private String place;
     private String name;
     private String photoUrl;
+    private String notionPhotoUrl;
     @Enumerated(EnumType.STRING)
     private Category category;
     private boolean ownerFound;
@@ -35,6 +36,10 @@ public class LostItems {
 
     public void changePhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public void changeNotionPhotoUrl(String notionPhotoUrl) {
+        this.notionPhotoUrl = notionPhotoUrl;
     }
 
     public void changeCategory(Category category) {
