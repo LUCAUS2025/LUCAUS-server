@@ -3,6 +3,7 @@ package com.likelion13.lucaus_api.controller;
 import com.likelion13.lucaus_api.dto.response.ShortNoticesResponseDto;
 import com.likelion13.lucaus_api.service.ShortNoticesService;
 import com.likelion13.lucaus_api.common.response.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -16,13 +17,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/short-notices")
-@Tag(name = "ShortNotices", description = "Operations related to ShortNotices")
+@Tag(name = "한줄 안내", description = "초창기에 토스트로 불리던 그 한줄 안내!")
 public class ShortNoticesController {
 
     @Autowired
     private ShortNoticesService shortNoticesService;
 
     @GetMapping
+    @Operation(summary = "한줄안내", description = "한줄안내를 조회하는 API입니다. ")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공적 조회",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),

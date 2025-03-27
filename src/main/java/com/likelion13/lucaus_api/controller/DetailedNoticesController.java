@@ -4,6 +4,7 @@ import com.likelion13.lucaus_api.dto.response.DetailedNoticesResponseDto;
 import com.likelion13.lucaus_api.service.DetailedNoticesService;
 import com.likelion13.lucaus_api.common.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/notices")
-@Tag(name = "Detailed Notices", description = "Operations related to detailed notices")
+@Tag(name = "공지 사항", description = "리스트로 보여지는 공지 사항! 토스트와 다름 주의!")
 public class DetailedNoticesController {
 
     private final DetailedNoticesService detailedNoticesService;
@@ -35,8 +36,8 @@ public class DetailedNoticesController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
     })
     public ApiResponse<Page<DetailedNoticesResponseDto>> getNotices(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @Parameter(description = "페이지 (1보다 커야합니다)", required = true) @RequestParam(defaultValue = "1") int page,
+            @Parameter(description = "사이즈 : 페이지 안에 들어있는 객체의 수 (1보다 커야합니다)", required = true) @RequestParam(defaultValue = "10") int size) {
 
         Page<DetailedNoticesResponseDto> noticesPage = detailedNoticesService.getNotices(page, size);
 
