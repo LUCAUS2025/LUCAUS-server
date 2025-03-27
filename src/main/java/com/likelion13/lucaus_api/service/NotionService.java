@@ -512,7 +512,7 @@ public class NotionService {
                 } else {
                     if (existingDetailedNotice.getUploadDateTime().plusHours(1).isAfter(LocalDateTime.now())) {
                         try {
-                            photoUrl = s3Service.downloadAndUploadImage(notionPhotoUrl, "lost");
+                            photoUrl = s3Service.downloadAndUploadImage(notionPhotoUrl, "notice");
                             if (notionPhotoUrl != null && notionPhotoUrl.length() > 200) {
                                 notionPhotoUrl = notionPhotoUrl.substring(0, 200);
                             }
@@ -530,7 +530,7 @@ public class NotionService {
             }
         } else {
             try {
-                photoUrl = s3Service.downloadAndUploadImage(notionPhotoUrl, "lost");
+                photoUrl = s3Service.downloadAndUploadImage(notionPhotoUrl, "etc");
                 if (notionPhotoUrl != null && notionPhotoUrl.length() > 200) {
                     notionPhotoUrl = notionPhotoUrl.substring(0, 200);
                 }
