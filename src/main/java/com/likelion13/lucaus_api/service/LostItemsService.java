@@ -44,30 +44,25 @@ public class LostItemsService {
     public Page<LostItemsResponseDto> getLostItems(String category, String date, int page, int size) {
 
         if (category == null || category.isEmpty()) {
-//            throw new GeneralHandler(ErrorCode._BAD_REQUEST, "카테고리는 필수 입력 값입니다.");
-            throw new GeneralHandler(ErrorCode._BAD_REQUEST);
+            throw new GeneralHandler(ErrorCode.INVALID_EMPTY);
         }
 
         if (!"TOTAL".equalsIgnoreCase(category) && !isValidCategory(category)) {
-//            throw new GeneralHandler(ErrorCode._BAD_REQUEST, "잘못된 카테고리입니다. (유효한 카테고리: TOTAL, COSMETICS, ELECTRONICS, CLOTHING, WALLET_CARD, OTHERS)");
-            throw new GeneralHandler(ErrorCode._BAD_REQUEST);
+            throw new GeneralHandler(ErrorCode.INVALID_CATEGORY);
         }
 
         if (date == null || date.isEmpty()) {
-//            throw new GeneralHandler(ErrorCode._BAD_REQUEST, "날짜는 필수 입력 값입니다.");
-            throw new GeneralHandler(ErrorCode._BAD_REQUEST);
+            throw new GeneralHandler(ErrorCode.INVALID_EMPTY);
         }
 
         try {
             LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
         } catch (DateTimeParseException e) {
-//            throw new GeneralHandler(ErrorCode._BAD_REQUEST, "날짜 형식이 올바르지 않습니다. (형식: YYYY-MM-DD)");
-            throw new GeneralHandler(ErrorCode._BAD_REQUEST);
+            throw new GeneralHandler(ErrorCode.INVALID_DATE);
         }
 
         if (page <= 0 || size <= 0) {
-//            throw new GeneralHandler(ErrorCode._BAD_REQUEST, "페이지와 사이즈는 1 이상의 값이어야 합니다.");
-            throw new GeneralHandler(ErrorCode._BAD_REQUEST);
+            throw new GeneralHandler(ErrorCode.INVALID_PAGE_SIZE);
         }
 
         Pageable pageable = PageRequest.of(page - 1, size);
