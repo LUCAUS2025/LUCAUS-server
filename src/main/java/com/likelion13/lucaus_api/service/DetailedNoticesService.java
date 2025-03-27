@@ -32,8 +32,7 @@ public class DetailedNoticesService {
     public Page<DetailedNoticesResponseDto> getNotices(int page, int size) {
 
         if (page <= 0 || size <= 0) {
-//            throw new GeneralHandler(ErrorCode._BAD_REQUEST,"페이지와 사이즈는 1 이상의 값이어야 합니다.");
-            throw new GeneralHandler(ErrorCode._BAD_REQUEST);
+            throw new GeneralHandler(ErrorCode.INVALID_PAGE_SIZE);
         }
 
         Pageable pageable = PageRequest.of(page - 1, size);

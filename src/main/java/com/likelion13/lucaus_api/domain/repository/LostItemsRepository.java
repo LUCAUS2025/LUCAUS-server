@@ -9,7 +9,9 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import com.likelion13.lucaus_api.domain.entity.LostItems.Category;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
+@RepositoryRestResource(exported = false)
 public interface LostItemsRepository extends JpaRepository<LostItems, Long> {
 
     Page<LostItems> findByCategoryAndUpdatedDateTimeBetween(
