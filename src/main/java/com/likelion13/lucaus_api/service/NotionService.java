@@ -273,8 +273,8 @@ public class NotionService {
                     case "기타":
                         category = "OTHERS";
                         break;
-                    case "화장품":
-                        category = "COSMETICS";
+                    case "잡화":
+                        category = "DAILY_NECESSITIES";
                         break;
                     case "전자기기":
                         category = "ELECTRONICS";
