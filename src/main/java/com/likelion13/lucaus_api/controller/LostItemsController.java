@@ -36,7 +36,7 @@ public class LostItemsController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
     })
     public ApiResponse<Page<LostItemsResponseDto>> getLostItems(
-            @Parameter(description = "카테고리 (COSMETICS, ELECTRONICS, CLOTHING, WALLET_CARD, OTHERS,TOTAL)", required = true) @RequestParam @NotNull String category,
+            @Parameter(description = "카테고리 (DAILY_NECESSITIES, ELECTRONICS, CLOTHING, WALLET_CARD, OTHERS,TOTAL)", required = true) @RequestParam @NotNull String category,
             @Parameter(description = "날짜 (형식: YYYY-MM-DD)", required = true) @RequestParam @NotNull String date,
             @Parameter(description = "페이지 (1보다 커야합니다)", required = true) @RequestParam(defaultValue = "1") int page,
             @Parameter(description = "사이즈 : 페이지 안에 들어있는 객체의 수 (1보다 커야합니다)", required = true) @RequestParam(defaultValue = "10") int size) {

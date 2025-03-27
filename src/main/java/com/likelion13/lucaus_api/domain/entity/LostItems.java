@@ -24,7 +24,7 @@ public class LostItems {
     private Category category;
     private boolean ownerFound;
     public enum Category {
-        COSMETICS, ELECTRONICS, CLOTHING, WALLET_CARD, OTHERS
+        DAILY_NECESSITIES, ELECTRONICS, CLOTHING, WALLET_CARD, OTHERS
     }
     public void changePlace(String place) {
         this.place = place;

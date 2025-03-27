@@ -22,7 +22,7 @@ public class LostItemsService {
 
     @Autowired
     private LostItemsRepository lostItemsRepository;
-    private static final String[] VALID_CATEGORIES = {"TOTAL","COSMETICS", "ELECTRONICS", "CLOTHING", "WALLET_CARD", "OTHERS"};
+    private static final String[] VALID_CATEGORIES = {"TOTAL","DAILY_NECESSITIES", "ELECTRONICS", "CLOTHING", "WALLET_CARD", "OTHERS"};
     private boolean isValidCategory(String category) {
         if (category == null) {
             return false;
