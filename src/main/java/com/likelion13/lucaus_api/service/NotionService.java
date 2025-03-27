@@ -80,7 +80,6 @@ public class NotionService {
                 JSONArray results = jsonResponse.getJSONArray("results");
 
                 Function<JSONObject, T> mapper = getMapper(dtoClass);
-
                 return mapToList(results, mapper);
             } else {
                 return new ArrayList<>();
@@ -271,19 +270,22 @@ public class NotionService {
                 String categoryName = select.optString("name", "").toUpperCase();
                 switch (categoryName) {
                     case "기타":
-                        category = "OTHERS";
+                        category = LostItems.Category.OTHERS.name();  // "OTHERS"로 설정
                         break;
                     case "잡화":
-                        category = "DAILY_NECESSITIES";
+                        category = LostItems.Category.DAILY_NECESSITIES.name();  // "DAILY_NECESSITIES"로 설정
                         break;
                     case "전자기기":
-                        category = "ELECTRONICS";
+                        category = LostItems.Category.ELECTRONICS.name();  // "ELECTRONICS"로 설정
                         break;
                     case "의류":
-                        category = "CLOTHING";
+                        category = LostItems.Category.CLOTHING.name();  // "CLOTHING"으로 설정
                         break;
                     case "지갑/카드":
-                        category = "WALLET_CARD";
+                        category = LostItems.Category.WALLET_CARD.name();  // "WALLET_CARD"로 설정
+                        break;
+                    default:
+                        category = LostItems.Category.OTHERS.name();  // 기본값은 "OTHERS"
                         break;
                 }
             }
@@ -333,7 +335,6 @@ public class NotionService {
         }
 
         Optional<LostItems> existingLostItem = lostItemsRepository.findByNotionId(notionId);
-
 
         Pair<String, String> result = Pair.of("", "");
 
@@ -440,7 +441,6 @@ public class NotionService {
 
             if (category != null) {
                 try {
-                    // 대문자로 변환 후 enum 값으로 변환
                     categoryEnum = LostItems.Category.valueOf(category.toUpperCase());
                 } catch (IllegalArgumentException e) {
                     categoryEnum = LostItems.Category.OTHERS;
@@ -467,7 +467,6 @@ public class NotionService {
                         .notionId(lostItemDto.getNotionId())
                         .build();
             }
-
             lostItemsRepository.save(lostItemEntity);
         }
     }

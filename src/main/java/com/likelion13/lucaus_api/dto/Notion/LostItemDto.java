@@ -25,7 +25,7 @@ public class LostItemDto {
         try {
             return LostItems.Category.valueOf(category.toUpperCase());
         } catch (IllegalArgumentException e) {
-            return LostItems.Category.OTHERS; // Invalid 값이 들어오면 'OTHERS'로 처리
+            return LostItems.Category.OTHERS;
         }
     }
 
