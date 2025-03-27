@@ -2,6 +2,7 @@ package com.likelion13.lucaus_api.controller;
 
 import com.likelion13.lucaus_api.dto.response.LostItemsResponseDto;
 import com.likelion13.lucaus_api.service.LostItemsService;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
@@ -16,8 +17,8 @@ public class LostItemsController {
 
     @GetMapping
     public ApiResponse<Page<LostItemsResponseDto>> getLostItems(
-            @RequestParam String category,
-            @RequestParam String date,
+            @RequestParam @NotNull String category,
+            @RequestParam @NotNull String date,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
 
