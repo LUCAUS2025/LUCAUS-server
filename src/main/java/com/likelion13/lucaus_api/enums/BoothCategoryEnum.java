@@ -9,7 +9,8 @@ public enum BoothCategoryEnum {
     FOOD("음식"),
     COUNCIL("총학생회"),
     FUN("취미"),
-    STUDY("학술");
+    STUDY("학술"),
+    SPORTS("운동");
 
     private final String koreanName;
 
