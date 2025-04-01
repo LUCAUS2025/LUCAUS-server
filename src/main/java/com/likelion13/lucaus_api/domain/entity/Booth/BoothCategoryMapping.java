@@ -15,7 +15,7 @@ public class BoothCategoryMapping {
 
     @ManyToOne
     @JoinColumn
-    private BoothCategoryMapping boothCategoryMapping;
+    private BoothCategory boothCategory;
 
     @ManyToOne
     @JoinColumn

@@ -7,7 +7,9 @@ public enum BoothCategoryEnum {
     GAME("게임"),
     SOGAETING("소개팅"),
     FOOD("음식"),
-    COUNCIL("총학생회");
+    COUNCIL("총학생회"),
+    FUN("취미"),
+    STUDY("학술");
 
     private final String koreanName;
 

@@ -19,6 +19,6 @@ public class BoothCategory {
     @Enumerated(EnumType.STRING)
     private BoothCategoryEnum category; // 부스카테고리
 
-    @OneToMany(mappedBy = "booth_category")
+    @OneToMany(mappedBy = "boothCategory")
     private List<BoothCategoryMapping> boothCategoryMapping;
 }
