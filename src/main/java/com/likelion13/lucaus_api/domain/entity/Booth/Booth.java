@@ -31,7 +31,7 @@ public class Booth {
 
     // 부스별 카테고리 테이블과 매핑
     @OneToMany(mappedBy = "booth")
-    private List<BoothCategory> boothCategory;
+    private List<BoothCategoryMapping> boothCategoryMappings;
 
     // 운영일자별 부스 세부정보 테이블과 매핑
     @OneToMany(mappedBy = "booth")
