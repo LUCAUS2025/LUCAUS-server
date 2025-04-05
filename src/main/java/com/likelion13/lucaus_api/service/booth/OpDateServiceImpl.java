@@ -1,0 +1,55 @@
+// OpDateServiceImpl.java
+package com.likelion13.lucaus_api.service.booth;
+
+import com.likelion13.lucaus_api.domain.repository.booth.OpDateBoothRepository;
+import com.likelion13.lucaus_api.dto.response.booth.BoothListByDateResponseDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.likelion13.lucaus_api.dto.response.booth.BoothListByDateResponseDto;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class OpDateServiceImpl implements OpDateService {
+
+    private final OpDateBoothRepository opDateBoothRepository;
+
+    public List<BoothListByDateResponseDto> getBoothListByDate(Integer opDate) {
+        // 부스 정보 조회
+        List<Object[]> boothResults = opDateBoothRepository.findBoothListByOpDate(opDate);
+
+        // 조회된 부스 ID들을 모아서 리스트로 변환
+        List<Long> boothIds = boothResults.stream()
+                .map(row -> ((Number) row[1]).longValue())
+                .collect(Collectors.toList());
+
+        // 카테고리 정보 조회
+        Map<Long, List<String>> categoriesMap = new HashMap<>();
+        if (!boothIds.isEmpty()) {
+            List<Object[]> categoryResults = opDateBoothRepository.findCategoriesByBoothIds(boothIds);
+
+            for (Object[] row : categoryResults) {
+                Long boothId = ((Number) row[0]).longValue();
+                String categoriesStr = (String) row[1];
+                List<String> categories = List.of(categoriesStr.split(","));
+                categoriesMap.put(boothId, categories);
+            }
+        }
+
+        // 결과 DTO로 변환
+        return boothResults.stream().map(row -> {
+            Integer dayBoothNum = (Integer) row[0];
+            Long boothId = ((Number) row[1]).longValue();
+            String name = (String) row[2];
+            String info = (String) row[3];
+            List<String> categories = categoriesMap.getOrDefault(boothId, List.of());
+
+            return new BoothListByDateResponseDto(dayBoothNum, name, info, categories);
+        }).collect(Collectors.toList());
+    }
+}
