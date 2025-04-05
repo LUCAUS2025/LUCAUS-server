@@ -1,4 +1,4 @@
-package com.likelion13.lucaus_api.domain.entity.Booth;
+package com.likelion13.lucaus_api.domain.entity.booth;
 
 import com.likelion13.lucaus_api.enums.BoothReviewEnum;
 import jakarta.persistence.*;

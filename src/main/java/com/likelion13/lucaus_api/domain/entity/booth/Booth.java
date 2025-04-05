@@ -1,4 +1,4 @@
-package com.likelion13.lucaus_api.domain.entity.Booth;
+package com.likelion13.lucaus_api.domain.entity.booth;
 
 
 import jakarta.persistence.*;

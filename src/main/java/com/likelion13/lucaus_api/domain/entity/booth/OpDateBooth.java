@@ -1,9 +1,7 @@
-package com.likelion13.lucaus_api.domain.entity.Booth;
+package com.likelion13.lucaus_api.domain.entity.booth;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -17,7 +15,7 @@ public class OpDateBooth {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDateTime opDate; // 운영일자
+    private Integer opDate; // 운영일자
 
     private Integer opTimeStart; // 운영시작시간
 
