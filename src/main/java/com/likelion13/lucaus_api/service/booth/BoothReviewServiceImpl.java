@@ -1,0 +1,57 @@
+package com.likelion13.lucaus_api.service.booth;
+
+import com.likelion13.lucaus_api.domain.entity.booth.Booth;
+import com.likelion13.lucaus_api.domain.entity.booth.BoothReviewMapping;
+import com.likelion13.lucaus_api.domain.repository.booth.BoothRepository;
+import com.likelion13.lucaus_api.dto.request.BoothReviewRequestDto;
+import com.likelion13.lucaus_api.enums.BoothReviewEnum;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+
+@Service
+@RequiredArgsConstructor
+public class BoothReviewServiceImpl implements BoothReviewService {
+    private final BoothRepository boothRepository;
+
+    @Transactional
+    public String postBoothReview(Long boothId, BoothReviewRequestDto reviewRequest) {
+
+        if (!isValidTime()) {
+            throw new IllegalStateException("요청 가능한 시간이 아님"); // 추후 에러 메세지 통일
+        }
+        Booth booth = boothRepository.findById(boothId).orElse(null); // 추후 예외처리하기
+
+        BoothReviewEnum reviewTag = reviewRequest.getBoothReviewTag();
+
+        assert booth != null;
+        BoothReviewMapping reviewMapping = booth.getBoothReviewMappings().stream()
+                .filter(data -> data.getBoothReview().getBoothReviewTag().equals(reviewTag))
+                .findFirst().orElse(null); // 추후 예외처리하기 // findFirst() 사용하면 첫 번째 요소만 찾고 바로 결과 반환해서 빠름
+
+        assert reviewMapping != null;
+        reviewMapping.addLikeNum();
+        return "success";
+    }
+
+    private boolean isValidTime() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalTime currentTime = now.toLocalTime();
+        DayOfWeek currentDay = now.getDayOfWeek();
+
+        LocalTime start = LocalTime.of(10, 0); // 시작 시간: 오전 10시
+        LocalTime endMonTueWed = LocalTime.of(18, 0); // 월화수: 오후 6시
+        LocalTime endThuFri = LocalTime.of(14, 0); // 목금: 오후 2시
+
+        return switch (currentDay) {
+            case MONDAY, TUESDAY, WEDNESDAY -> currentTime.isAfter(start) && currentTime.isBefore(endMonTueWed);
+            case THURSDAY, FRIDAY -> currentTime.isAfter(start) && currentTime.isBefore(endThuFri);
+            default -> false; // 주말x
+        };
+    }
+}

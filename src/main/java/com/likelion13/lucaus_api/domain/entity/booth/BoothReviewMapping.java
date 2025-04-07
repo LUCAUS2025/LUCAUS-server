@@ -22,4 +22,8 @@ public class BoothReviewMapping {
     private Booth booth;
 
     private Integer likeNum; // 태그별 좋아요 수
+
+    public void addLikeNum(){
+        this.likeNum++;
+    }
 }
