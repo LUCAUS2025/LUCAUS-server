@@ -6,9 +6,11 @@ import com.likelion13.lucaus_api.dto.response.booth.BoothDetailResponseDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.List;
 
+@RepositoryRestResource(exported = false)
 public interface BoothDetailRepository extends JpaRepository<Booth, Long> {
     @Query(value = """
     SELECT o.day_booth_num AS dayBoothNum,
