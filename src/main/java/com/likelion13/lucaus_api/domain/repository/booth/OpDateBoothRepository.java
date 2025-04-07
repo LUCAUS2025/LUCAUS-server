@@ -5,10 +5,12 @@ import com.likelion13.lucaus_api.dto.response.booth.BoothListByDateResponseDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.List;
 
 
+@RepositoryRestResource(exported = false)
 public interface OpDateBoothRepository extends JpaRepository<OpDateBooth, Long> {
 
     // 부스 정보 조회 (카테고리 제외)
