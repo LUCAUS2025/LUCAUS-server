@@ -25,7 +25,7 @@ public class FoodTruck {
     private String cover; // 커버 이미지
 
     @OneToMany(mappedBy = "foodTruck")
-    private List<FoodTruckMenuMapping> foodTruckMenuMappings;
+    private List<FoodTruckMenu> foodTruckMenu;
 
     @OneToMany(mappedBy = "foodTruck")
     private List<FoodTruckReviewMapping> foodTruckReviewMappings;
