@@ -19,6 +19,9 @@ public class FoodTruckMenu {
 
     private Integer menuPrice;// 메뉴가격
 
-    @OneToMany(mappedBy = "foodTruckMenu")
-    private List<FoodTruckMenuMapping> foodTruckMenuMapping;
+    private Boolean isRepresent; // 대표메뉴여부
+
+    @ManyToOne
+    @JoinColumn
+    private FoodTruck foodTruck;
 }
