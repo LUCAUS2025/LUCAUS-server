@@ -6,7 +6,7 @@ import com.likelion13.lucaus_api.dto.response.booth.BoothDetailResponseDto;
 import com.likelion13.lucaus_api.dto.response.booth.BoothListByDateResponseDto;
 import com.likelion13.lucaus_api.service.booth.BoothDetailService;
 import com.likelion13.lucaus_api.service.booth.BoothReviewService;
-import com.likelion13.lucaus_api.service.booth.OpDateService;
+import com.likelion13.lucaus_api.service.booth.BoothOpDateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoothController {
 
-    private final OpDateService opDateService;
+    private final BoothOpDateService boothOpDateService;
 
     private final BoothDetailService boothDetailService;
 
@@ -25,7 +25,7 @@ public class BoothController {
 
     @GetMapping("/{opDate}")
     public ApiResponse<List<BoothListByDateResponseDto>> getBoothListByDate(@PathVariable Integer opDate){
-        List<BoothListByDateResponseDto> result = opDateService.getBoothListByDate(opDate);
+        List<BoothListByDateResponseDto> result = boothOpDateService.getBoothListByDate(opDate);
         return ApiResponse.onSuccess(result);
     }
 

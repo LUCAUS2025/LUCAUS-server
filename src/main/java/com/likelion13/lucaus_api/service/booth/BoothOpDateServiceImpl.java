@@ -4,9 +4,7 @@ package com.likelion13.lucaus_api.service.booth;
 import com.likelion13.lucaus_api.domain.repository.booth.OpDateBoothRepository;
 import com.likelion13.lucaus_api.dto.response.booth.BoothListByDateResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.likelion13.lucaus_api.dto.response.booth.BoothListByDateResponseDto;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class OpDateServiceImpl implements OpDateService {
+public class BoothOpDateServiceImpl implements BoothOpDateService {
 
     private final OpDateBoothRepository opDateBoothRepository;
 

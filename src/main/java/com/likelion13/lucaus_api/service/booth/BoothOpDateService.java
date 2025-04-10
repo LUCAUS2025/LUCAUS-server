@@ -4,6 +4,6 @@ import com.likelion13.lucaus_api.dto.response.booth.BoothListByDateResponseDto;
 
 import java.util.List;
 
-public interface OpDateService {
+public interface BoothOpDateService {
     List<BoothListByDateResponseDto> getBoothListByDate(Integer opDate);
 }
