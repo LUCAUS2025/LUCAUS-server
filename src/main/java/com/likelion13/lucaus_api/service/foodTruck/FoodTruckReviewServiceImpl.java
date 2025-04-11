@@ -43,11 +43,11 @@ public class FoodTruckReviewServiceImpl implements FoodTruckReviewService {
         LocalTime currentTime = now.toLocalTime();
         DayOfWeek currentDay = now.getDayOfWeek();
 
-        LocalTime start = LocalTime.of(00, 0); // 시작 시간: 오전 10시
-        LocalTime end = LocalTime.of(23, 59); //
+        LocalTime start = LocalTime.of(10, 0); // 시작 시간: 오전 10시
+        LocalTime end = LocalTime.of(18, 0); //
 
         return switch (currentDay) {
-            case MONDAY, TUESDAY, WEDNESDAY ,THURSDAY,FRIDAY, SATURDAY -> currentTime.isAfter(start) && currentTime.isBefore(end);
+            case MONDAY, TUESDAY, WEDNESDAY ,THURSDAY,FRIDAY -> currentTime.isAfter(start) && currentTime.isBefore(end);
             default -> false; // 주말x
         };
     }
