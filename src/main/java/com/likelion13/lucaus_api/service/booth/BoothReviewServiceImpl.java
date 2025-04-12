@@ -65,7 +65,7 @@ public class BoothReviewServiceImpl implements BoothReviewService {
         return switch (currentDay) {
             case MONDAY, TUESDAY, WEDNESDAY -> currentTime.isAfter(start) && currentTime.isBefore(endMonTueWed);
             case THURSDAY, FRIDAY -> currentTime.isAfter(start) && currentTime.isBefore(endThuFri);
-            default -> true; // 주말x
+            default -> false; // 주말x
         };
     }
 }
