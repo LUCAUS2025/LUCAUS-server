@@ -28,7 +28,10 @@ public enum ErrorCode implements BaseErrorCode {
     INVALID_REVIEW_TAG(HttpStatus.BAD_REQUEST, "REVIEW4002", "리뷰 태그 잘못되었습니다."),
 
     // 부스관련
-    NOT_FOUND_BOOTH(HttpStatus.NOT_FOUND, "BOOTH404", "조건에 맞는 부스를 찾을 수 없습니다.");
+    NOT_FOUND_BOOTH(HttpStatus.NOT_FOUND, "BOOTH404", "조건에 맞는 부스를 찾을 수 없습니다."),
+
+    // 푸드트럭 관련
+    NOT_FOUND_FOOD_TRUCK(HttpStatus.NOT_FOUND, "FOOD-TRUCK404", "조건에 맞는 푸드트럭을 찾을 수 없습니다.");
 
 
 

@@ -3,6 +3,7 @@ package com.likelion13.lucaus_api.common.exception;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.likelion13.lucaus_api.common.response.ApiResponse;
 import com.likelion13.lucaus_api.enums.BoothReviewEnum;
+import com.likelion13.lucaus_api.enums.FoodTruckReviewEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -94,6 +95,18 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
         if (ex.getCause() instanceof InvalidFormatException invalidFormatException &&
                 invalidFormatException.getTargetType().equals(BoothReviewEnum.class)) {
+            return handleExceptionInternalFalse(
+                    ex,
+                    ErrorCode.INVALID_REVIEW_TAG,
+                    HttpHeaders.EMPTY,
+                    ErrorCode.INVALID_REVIEW_TAG.getHttpStatus(),
+                    request,
+                    "허용되지 않은 리뷰 태그입니다."
+            );
+        }
+
+        if (ex.getCause() instanceof InvalidFormatException invalidFormatException &&
+                invalidFormatException.getTargetType().equals(FoodTruckReviewEnum.class)) {
             return handleExceptionInternalFalse(
                     ex,
                     ErrorCode.INVALID_REVIEW_TAG,

@@ -1,5 +1,7 @@
 package com.likelion13.lucaus_api.service.foodTruck;
 
+import com.likelion13.lucaus_api.common.exception.ErrorCode;
+import com.likelion13.lucaus_api.common.exception.GeneralHandler;
 import com.likelion13.lucaus_api.domain.repository.foodTruck.FoodTruckDetailRepository;
 import com.likelion13.lucaus_api.dto.response.FoodTruck.FoodTruckDetailResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,18 @@ public class FoodTruckDetailServiceImpl implements FoodTruckDetailService {
     private final FoodTruckDetailRepository foodTruckDetailRepository;
 
     public List<FoodTruckDetailResponseDto> getFoodTruckDetailByOpDateAndDayFoodTruckNum(Integer opDate, Integer dayFoodTruckNum){
+
+        // 운영일자 어긋난 경우
+        if(!(opDate >=19 && opDate <=23)) {
+            throw new GeneralHandler(ErrorCode.INVALID_OP_DATE);
+        }
+
         List<Object[]> results = foodTruckDetailRepository.findFoodTruckDetailByOpDateAndDayFoodTruckNum(opDate,dayFoodTruckNum);
+
+        // 조건 맞는 푸드트럭 존재하지 않는 경우
+        if(results.isEmpty()) {
+            throw new GeneralHandler(ErrorCode.NOT_FOUND_FOOD_TRUCK);
+        }
 
         return results.stream().map(row -> {
             Integer dayFoodTruckNumResult = (Integer) row[0];

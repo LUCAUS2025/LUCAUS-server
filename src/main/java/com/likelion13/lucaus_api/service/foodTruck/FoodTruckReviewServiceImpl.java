@@ -1,5 +1,7 @@
 package com.likelion13.lucaus_api.service.foodTruck;
 
+import com.likelion13.lucaus_api.common.exception.ErrorCode;
+import com.likelion13.lucaus_api.common.exception.GeneralHandler;
 import com.likelion13.lucaus_api.domain.entity.foodTruck.FoodTruck;
 import com.likelion13.lucaus_api.domain.entity.foodTruck.FoodTruckReviewMapping;
 import com.likelion13.lucaus_api.domain.repository.foodTruck.FoodTruckRepository;
@@ -23,14 +25,23 @@ public class FoodTruckReviewServiceImpl implements FoodTruckReviewService {
     @Transactional
     public String postFoodTruckReview(Long foodTruckId, FoodTruckReviewRequestDto reviewRequest) {
 
-        if (!isValidTime()){
-            throw new IllegalStateException("Invalid time"); // 추후 수정
+        // 리뷰 달 수 없는 시간
+        if (!isValidTime()) {
+            throw new GeneralHandler(ErrorCode.INVALID_REVIEW_TIME);
         }
-        FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId).orElse(null); // 추후 예외처리
+
+        FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId).orElse(null);
+
+        if(foodTruck == null) {
+            throw new GeneralHandler(ErrorCode.NOT_FOUND_FOOD_TRUCK);
+        }
 
         List<FoodTruckReviewEnum> reviewTags = reviewRequest.getFoodTruckReviewTags();
 
-        assert foodTruck != null;
+        if(reviewTags.isEmpty()) {
+            throw new GeneralHandler(ErrorCode.INVALID_REVIEW_TAG);
+        }
+
         reviewTags.forEach(reviewTag -> {
             FoodTruckReviewMapping reviewMapping = foodTruck.getFoodTruckReviewMappings().stream()
                     .filter(data -> data.getFoodTruckReview().getFoodTruckReviewTag().equals(reviewTag))
