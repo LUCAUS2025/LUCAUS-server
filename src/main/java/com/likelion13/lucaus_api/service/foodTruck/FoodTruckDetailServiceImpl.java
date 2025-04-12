@@ -55,7 +55,8 @@ public class FoodTruckDetailServiceImpl implements FoodTruckDetailService {
                     cover,
                     location,
                     foodTruckMenuList,
-                    foodTruckReviewList
+                    foodTruckReviewList,
+                    foodTruckId
             );
         }).collect(Collectors.toList());
     }

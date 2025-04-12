@@ -27,6 +27,8 @@ public class BoothDetailResponseDto {
 
     private List<Map<String, Integer>> boothReview; // 부스리뷰
 
+    private Long boothId;// 부스 고유 아이디
+
     //private Integer detailLocation; // 세부위치 번호
 
     // private List<Integer> opDateList; // 운영일자 리스트
