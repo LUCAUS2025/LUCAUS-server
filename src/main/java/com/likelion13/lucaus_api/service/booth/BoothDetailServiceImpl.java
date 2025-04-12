@@ -1,20 +1,12 @@
 package com.likelion13.lucaus_api.service.booth;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likelion13.lucaus_api.domain.repository.booth.BoothDetailRepository;
 import com.likelion13.lucaus_api.dto.response.booth.BoothDetailResponseDto;
-import com.likelion13.lucaus_api.dto.response.booth.BoothReviewResponseDto;
-import com.likelion13.lucaus_api.enums.BoothReviewEnum;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Service
 @RequiredArgsConstructor
@@ -57,7 +49,8 @@ public class BoothDetailServiceImpl implements BoothDetailService {
                     cover,
                     location,
                     categories,
-                    boothReviewList
+                    boothReviewList,
+                    boothId
             );
         }).collect(Collectors.toList());
     }

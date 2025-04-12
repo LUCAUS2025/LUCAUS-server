@@ -20,4 +20,6 @@ public class FoodTruckDetailResponseDto {
     private List<Map<String, Integer>> menus; // 메뉴들(메뉴이름, 가격)
 
     private List<Map<String, Integer>> foodTruckReviews; // 푸드트럭리뷰
+
+    private Long foodTruckId;
 }

@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class FoodTruckReviewRequestDto {
-    private FoodTruckReviewEnum foodTruckReviewTag;
+    private List<FoodTruckReviewEnum> foodTruckReviewTags;
 }
