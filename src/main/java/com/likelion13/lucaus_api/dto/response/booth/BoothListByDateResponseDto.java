@@ -16,4 +16,5 @@ public class BoothListByDateResponseDto {
     private String name;
     private String info;
     private List<String> categories;
+    private Integer recommendNum;
 }

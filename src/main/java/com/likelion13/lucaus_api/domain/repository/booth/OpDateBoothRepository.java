@@ -36,4 +36,13 @@ public interface OpDateBoothRepository extends JpaRepository<OpDateBooth, Long> 
     GROUP BY bcm.booth_id
     """, nativeQuery = true)
     List<Object[]> findCategoriesByBoothIds(@Param("boothIds") List<Long> boothIds);
+
+    // 완전 추천해요 개수 가져오기
+    @Query(value = """
+    select brm.booth_id, brm.like_num
+    from booth_review_mapping brm
+    join booth_review r on brm.booth_review_id = r.id
+    where brm.booth_id IN :boothIds and r.booth_review_tag = 'RECOMMEND'
+    """, nativeQuery = true)
+    List<Object[]> findRecommendByBoothIds(@Param("boothIds") List<Long> boothIds);
 }

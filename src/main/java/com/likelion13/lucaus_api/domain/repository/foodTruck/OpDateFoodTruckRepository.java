@@ -11,6 +11,7 @@ import java.util.List;
 @RepositoryRestResource(exported = false)
 public interface OpDateFoodTruckRepository extends JpaRepository<OpDateFoodTruck, Long> {
 
+    // 푸드트럭 조회
     @Query(value = """
     select o.day_food_truck_num as dayFoodTruckNum,
        f.id as foodTruckId,
@@ -23,6 +24,7 @@ public interface OpDateFoodTruckRepository extends JpaRepository<OpDateFoodTruck
     """, nativeQuery = true)
     List<Object[]> findFoodTruckListByOpDate(@Param("opDate") Integer opDate);
 
+    // 푸드트럭 대표메뉴 조회
     @Query(value = """
     select ftm.food_truck_id, GROUP_CONCAT(ftm.menu_name) as menus
     from food_truck_menu ftm
