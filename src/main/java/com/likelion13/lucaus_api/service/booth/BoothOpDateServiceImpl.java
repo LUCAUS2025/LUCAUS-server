@@ -39,6 +39,18 @@ public class BoothOpDateServiceImpl implements BoothOpDateService {
             }
         }
 
+        //완전 추천해요 리뷰 숫자 조회
+        Map<Long, Integer> recommendMap = new HashMap<>();
+        if (!boothIds.isEmpty()) {
+            List<Object[]> recommendResults = opDateBoothRepository.findRecommendByBoothIds(boothIds);
+
+            for (Object[] row : recommendResults) {
+                Long boothId = ((Number) row[0]).longValue();
+                Integer recommendNum = (Integer) row[1];
+                recommendMap.put(boothId, recommendNum);
+            }
+        }
+
         // 결과 DTO로 변환
         return boothResults.stream().map(row -> {
             Integer dayBoothNum = (Integer) row[0];
@@ -46,8 +58,9 @@ public class BoothOpDateServiceImpl implements BoothOpDateService {
             String name = (String) row[2];
             String info = (String) row[3];
             List<String> categories = categoriesMap.getOrDefault(boothId, List.of());
+            Integer recommendNums = recommendMap.getOrDefault(boothId, 0);
 
-            return new BoothListByDateResponseDto(dayBoothNum, name, info, categories);
+            return new BoothListByDateResponseDto(dayBoothNum, name, info, categories, recommendNums);
         }).collect(Collectors.toList());
     }
 }
