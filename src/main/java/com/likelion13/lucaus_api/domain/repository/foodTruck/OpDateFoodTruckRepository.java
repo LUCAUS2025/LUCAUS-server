@@ -18,7 +18,9 @@ public interface OpDateFoodTruckRepository extends JpaRepository<OpDateFoodTruck
     from op_date_food_truck o
     join food_truck f on o.food_truck_id = f.id
     where o.op_date = :opDate
-    group by o.day_food_truck_num, f.id, f.name""", nativeQuery = true)
+    group by o.day_food_truck_num, f.id, f.name
+    order by o.day_food_truck_num
+    """, nativeQuery = true)
     List<Object[]> findFoodTruckListByOpDate(@Param("opDate") Integer opDate);
 
     @Query(value = """

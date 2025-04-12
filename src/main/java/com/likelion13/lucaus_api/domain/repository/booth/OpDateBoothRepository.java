@@ -23,6 +23,7 @@ public interface OpDateBoothRepository extends JpaRepository<OpDateBooth, Long> 
     JOIN booth b ON o.booth_id = b.id
     WHERE o.op_date = :opDate
     GROUP BY o.day_booth_num, b.id, b.name, b.info
+    ORDER BY o.day_booth_num
     """, nativeQuery = true)
     List<Object[]> findBoothListByOpDate(@Param("opDate") Integer opDate);
 
