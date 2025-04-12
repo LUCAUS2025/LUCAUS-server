@@ -25,6 +25,7 @@ public class BoothReviewServiceImpl implements BoothReviewService {
     @Transactional
     public String postBoothReview(Long boothId, BoothReviewRequestDto reviewRequest) {
 
+        // 리뷰 달 수 없는 시간
         if (!isValidTime()) {
             throw new GeneralHandler(ErrorCode.INVALID_REVIEW_TIME);
         }
