@@ -1,5 +1,7 @@
 package com.likelion13.lucaus_api.service.booth;
 
+import com.likelion13.lucaus_api.common.exception.ErrorCode;
+import com.likelion13.lucaus_api.common.exception.GeneralHandler;
 import com.likelion13.lucaus_api.domain.repository.booth.BoothDetailRepository;
 import com.likelion13.lucaus_api.dto.response.booth.BoothDetailResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +17,18 @@ public class BoothDetailServiceImpl implements BoothDetailService {
     private final BoothDetailRepository boothDetailRepository;
 
     public List<BoothDetailResponseDto> getBoothDetailByOpDateAndDayBoothNum(Integer opDate, Integer dayBoothNum) {
+
+        // 운영일자 어긋난 경우
+        if(!(opDate >=19 && opDate <=23)) {
+            throw new GeneralHandler(ErrorCode.INVALID_OP_DATE);
+        }
+
         List<Object[]> results = boothDetailRepository.findBoothDetailByOpDateAndDayBoothNum(opDate, dayBoothNum);
+
+        // 조건 맞는 부스 존재하지 않는 경우
+        if(results.isEmpty()) {
+            throw new GeneralHandler(ErrorCode.NOT_FOUND_BOOTH);
+        }
 
         return results.stream().map(row -> {
             Integer dayBoothNumResult = (Integer) row[0];

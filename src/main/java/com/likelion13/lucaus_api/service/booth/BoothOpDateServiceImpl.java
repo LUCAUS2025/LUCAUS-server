@@ -1,6 +1,8 @@
 // OpDateServiceImpl.java
 package com.likelion13.lucaus_api.service.booth;
 
+import com.likelion13.lucaus_api.common.exception.ErrorCode;
+import com.likelion13.lucaus_api.common.exception.GeneralHandler;
 import com.likelion13.lucaus_api.domain.repository.booth.OpDateBoothRepository;
 import com.likelion13.lucaus_api.dto.response.booth.BoothListByDateResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +20,19 @@ public class BoothOpDateServiceImpl implements BoothOpDateService {
     private final OpDateBoothRepository opDateBoothRepository;
 
     public List<BoothListByDateResponseDto> getBoothListByDate(Integer opDate) {
+
+        // 운영일자 잘못된 경우
+        if(!(opDate >=19 && opDate <=23)) {
+            throw new GeneralHandler(ErrorCode.INVALID_OP_DATE);
+        }
+
         // 부스 정보 조회
         List<Object[]> boothResults = opDateBoothRepository.findBoothListByOpDate(opDate);
+
+        // 조회된 부스 없는 경우
+        if(boothResults.isEmpty()) {
+            throw new GeneralHandler(ErrorCode.NOT_FOUND_BOOTH);
+        }
 
         // 조회된 부스 ID들을 모아서 리스트로 변환
         List<Long> boothIds = boothResults.stream()

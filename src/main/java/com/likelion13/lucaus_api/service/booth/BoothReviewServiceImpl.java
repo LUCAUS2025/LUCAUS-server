@@ -1,5 +1,7 @@
 package com.likelion13.lucaus_api.service.booth;
 
+import com.likelion13.lucaus_api.common.exception.ErrorCode;
+import com.likelion13.lucaus_api.common.exception.GeneralHandler;
 import com.likelion13.lucaus_api.domain.entity.booth.Booth;
 import com.likelion13.lucaus_api.domain.entity.booth.BoothReviewMapping;
 import com.likelion13.lucaus_api.domain.repository.booth.BoothRepository;
@@ -24,18 +26,27 @@ public class BoothReviewServiceImpl implements BoothReviewService {
     public String postBoothReview(Long boothId, BoothReviewRequestDto reviewRequest) {
 
         if (!isValidTime()) {
-            throw new IllegalStateException("요청 가능한 시간이 아님"); // 추후 에러 메세지 통일
+            throw new GeneralHandler(ErrorCode.INVALID_REVIEW_TIME);
         }
-        Booth booth = boothRepository.findById(boothId).orElse(null); // 추후 예외처리하기
+        Booth booth = boothRepository.findById(boothId).orElse(null);
+
+        if(booth == null) {
+            throw new GeneralHandler(ErrorCode.NOT_FOUND_BOOTH);
+        }
 
         List<BoothReviewEnum> reviewTags = reviewRequest.getBoothReviewTags();
 
-        assert booth != null;
+        if(reviewTags.isEmpty()) {
+            throw new GeneralHandler(ErrorCode.INVALID_REVIEW_TAG);
+        }
+
         reviewTags.forEach(reviewTag -> {
             BoothReviewMapping reviewMapping = booth.getBoothReviewMappings().stream()
                     .filter(data -> data.getBoothReview().getBoothReviewTag().equals(reviewTag))
                     .findFirst().orElse(null);
+
             assert reviewMapping != null;
+
             reviewMapping.addLikeNum();
         });
 
@@ -54,7 +65,7 @@ public class BoothReviewServiceImpl implements BoothReviewService {
         return switch (currentDay) {
             case MONDAY, TUESDAY, WEDNESDAY -> currentTime.isAfter(start) && currentTime.isBefore(endMonTueWed);
             case THURSDAY, FRIDAY -> currentTime.isAfter(start) && currentTime.isBefore(endThuFri);
-            default -> false; // 주말x
+            default -> true; // 주말x
         };
     }
 }

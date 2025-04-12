@@ -1,6 +1,8 @@
 package com.likelion13.lucaus_api.common.exception;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.likelion13.lucaus_api.common.response.ApiResponse;
+import com.likelion13.lucaus_api.enums.BoothReviewEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -9,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -81,4 +84,26 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         return super.handleExceptionInternal(e, body, headers, errorCommonStatus.getHttpStatus(), request);
     }
 
+    //json enum 파싱 실패 경우 공통 에러처리
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(
+            HttpMessageNotReadableException ex,
+            HttpHeaders headers,
+            HttpStatusCode status,
+            WebRequest request) {
+
+        if (ex.getCause() instanceof InvalidFormatException invalidFormatException &&
+                invalidFormatException.getTargetType().equals(BoothReviewEnum.class)) {
+            return handleExceptionInternalFalse(
+                    ex,
+                    ErrorCode.INVALID_REVIEW_TAG,
+                    HttpHeaders.EMPTY,
+                    ErrorCode.INVALID_REVIEW_TAG.getHttpStatus(),
+                    request,
+                    "허용되지 않은 리뷰 태그입니다."
+            );
+        }
+
+        return super.handleHttpMessageNotReadable(ex, headers, status, request);
+    }
 }
