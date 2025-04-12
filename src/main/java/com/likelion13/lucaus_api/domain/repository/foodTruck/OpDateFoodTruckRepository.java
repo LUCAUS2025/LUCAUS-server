@@ -33,4 +33,13 @@ public interface OpDateFoodTruckRepository extends JpaRepository<OpDateFoodTruck
     group by ftm.food_truck_id
     """, nativeQuery = true)
     List<Object[]> findRepresentMenusByFoodTruckId(@Param("foodTruckIds") List<Long> foodTruckIds);
+
+    // 완전 추천해요 개수 가져오기
+    @Query(value = """
+    select ftrm.food_truck_id, ftrm.like_num
+    from food_truck_review_mapping ftrm
+    join food_truck_review ftr on ftrm.food_truck_review_id = ftr.id
+    where ftrm.food_truck_id in :foodTruckIds and ftr.food_truck_review_tag = 'RECOMMENDED'
+    """, nativeQuery = true)
+    List<Object[]> findRecommendByFoodTruckIds(@Param("foodTruckIds") List<Long> foodTruckIds);
 }

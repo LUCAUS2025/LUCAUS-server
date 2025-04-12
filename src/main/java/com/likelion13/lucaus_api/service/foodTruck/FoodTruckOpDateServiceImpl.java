@@ -18,12 +18,15 @@ public class FoodTruckOpDateServiceImpl implements FoodTruckOpDateService {
     private final OpDateFoodTruckRepository opDateFoodTruckRepository;
 
     public List<FoodTruckListByDateResponseDto> getFoodTruckListByDate(Integer opDate) {
+        // 푸드트럭 정보 조회
         List<Object[]> foodTruckResults = opDateFoodTruckRepository.findFoodTruckListByOpDate(opDate);
 
+        // 조회된 푸드트럭 id들 모아서 리스트로 변환
         List<Long> foodTruckIds = foodTruckResults.stream()
                 .map(row -> ((Number) row[1]).longValue())
                 .toList();
 
+        // 메뉴 정보 조회
         Map<Long, List<String>> menusMap = new HashMap<>();
         if(!foodTruckIds.isEmpty()) {
             List<Object[]> menuResults = opDateFoodTruckRepository.findRepresentMenusByFoodTruckId(foodTruckIds);
@@ -36,13 +39,27 @@ public class FoodTruckOpDateServiceImpl implements FoodTruckOpDateService {
             }
         }
 
+        // 완전 추천해요 리뷰 숫자 조회
+        Map<Long, Integer> recommendMap = new HashMap<>();
+        if (!foodTruckIds.isEmpty()) {
+            List<Object[]> recommendResults = opDateFoodTruckRepository.findRecommendByFoodTruckIds(foodTruckIds);
+
+            for(Object[] row : recommendResults) {
+                Long foodTruckId = (Long) row[0];
+                Integer recommendNum = (Integer) row[1];
+                recommendMap.put(foodTruckId, recommendNum);
+            }
+        }
+
+        // 결과 DTO로 변환
         return foodTruckResults.stream().map(row -> {
             Integer dayFoodTruckNum = (Integer) row[0];
-            Long foodTruckId = (Long) row[1];
+            Long foodTruckId = ((Number) row[1]).longValue();
             String name = (String) row[2];
             List<String> representMenu = menusMap.getOrDefault(foodTruckId, List.of());
+            Integer recommendNum = recommendMap.get(foodTruckId);
 
-            return new FoodTruckListByDateResponseDto(dayFoodTruckNum, name, representMenu);
+            return new FoodTruckListByDateResponseDto(dayFoodTruckNum, name, representMenu, recommendNum);
         }).collect(Collectors.toList());
 
     }

@@ -11,4 +11,5 @@ public class FoodTruckListByDateResponseDto {
     private Integer dayBoothNum;
     private String name;
     private List<String> representMenu;
+    private Integer recommendNum;
 }
