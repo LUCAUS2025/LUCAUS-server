@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class BoothReviewRequestDto {
-    private BoothReviewEnum boothReviewTag;
+    private List<BoothReviewEnum> boothReviewTags;
 }

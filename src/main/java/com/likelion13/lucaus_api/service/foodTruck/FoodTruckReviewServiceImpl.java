@@ -13,6 +13,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,20 +22,23 @@ public class FoodTruckReviewServiceImpl implements FoodTruckReviewService {
 
     @Transactional
     public String postFoodTruckReview(Long foodTruckId, FoodTruckReviewRequestDto reviewRequest) {
+
         if (!isValidTime()){
             throw new IllegalStateException("Invalid time"); // 추후 수정
         }
         FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId).orElse(null); // 추후 예외처리
 
-        FoodTruckReviewEnum reviewTag = reviewRequest.getFoodTruckReviewTag();
+        List<FoodTruckReviewEnum> reviewTags = reviewRequest.getFoodTruckReviewTags();
 
         assert foodTruck != null;
-        FoodTruckReviewMapping reviewMapping = foodTruck.getFoodTruckReviewMappings().stream()
-                .filter(data -> data.getFoodTruckReview().getFoodTruckReviewTag().equals(reviewTag))
-                .findFirst().orElse(null); // 추후 예외처리하기
+        reviewTags.forEach(reviewTag -> {
+            FoodTruckReviewMapping reviewMapping = foodTruck.getFoodTruckReviewMappings().stream()
+                    .filter(data -> data.getFoodTruckReview().getFoodTruckReviewTag().equals(reviewTag))
+                    .findFirst().orElse(null); // 추후 예외처리하기
+            assert reviewMapping != null;
+            reviewMapping.addLikeNum();
+        });
 
-        assert reviewMapping != null;
-        reviewMapping.addLikeNum();
         return "success";
     }
 

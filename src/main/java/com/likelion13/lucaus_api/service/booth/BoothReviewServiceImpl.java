@@ -13,6 +13,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,15 +28,17 @@ public class BoothReviewServiceImpl implements BoothReviewService {
         }
         Booth booth = boothRepository.findById(boothId).orElse(null); // 추후 예외처리하기
 
-        BoothReviewEnum reviewTag = reviewRequest.getBoothReviewTag();
+        List<BoothReviewEnum> reviewTags = reviewRequest.getBoothReviewTags();
 
         assert booth != null;
-        BoothReviewMapping reviewMapping = booth.getBoothReviewMappings().stream()
-                .filter(data -> data.getBoothReview().getBoothReviewTag().equals(reviewTag))
-                .findFirst().orElse(null); // 추후 예외처리하기 // findFirst() 사용하면 첫 번째 요소만 찾고 바로 결과 반환해서 빠름
+        reviewTags.forEach(reviewTag -> {
+            BoothReviewMapping reviewMapping = booth.getBoothReviewMappings().stream()
+                    .filter(data -> data.getBoothReview().getBoothReviewTag().equals(reviewTag))
+                    .findFirst().orElse(null);
+            assert reviewMapping != null;
+            reviewMapping.addLikeNum();
+        });
 
-        assert reviewMapping != null;
-        reviewMapping.addLikeNum();
         return "success";
     }
 
