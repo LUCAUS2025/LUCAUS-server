@@ -17,6 +17,8 @@ public enum ErrorCode implements BaseErrorCode {
     INVALID_DATE(HttpStatus.BAD_REQUEST, "DATE400", "잘못된 날짜 형식입니다. (형식: YYYY-MM-DD)"),
     INVALID_PAGE_SIZE(HttpStatus.BAD_REQUEST, "PAGE400", "페이지와 사이즈는 1보다 커야합니다."),
     INVALID_EMPTY(HttpStatus.BAD_REQUEST, "EMPTY400", "카테고리,날짜,페이지,사이즈는 필수값 입니다."),
+    NOTICE_NOT_FOUND(HttpStatus.BAD_REQUEST,"NOTICE404", "해당 공지사항을 찾을 수 없습니다."),
+
 
     // 운영일자 어긴 경우
     INVALID_OP_DATE(HttpStatus.BAD_REQUEST, "OPDATE400", "opDate는 19~23 사이의 하나의 Integer 입니다."),

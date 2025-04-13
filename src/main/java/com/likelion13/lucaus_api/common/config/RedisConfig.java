@@ -47,11 +47,15 @@ public class RedisConfig {
         RedisCacheConfiguration tenMinutesCache = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(10))  // 10분 TTL
                 .disableCachingNullValues();
+        RedisCacheConfiguration oneHourCache = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofHours(1))  // 1시간 TTL
+                .disableCachingNullValues();
 
         return RedisCacheManager.builder(jedisConnectionFactory())
                 .withCacheConfiguration("short_1min", oneMinuteCache)
                 .withCacheConfiguration("detail_5min", fiveMinutesCache)
                 .withCacheConfiguration("lost_10min", tenMinutesCache)
+                .withCacheConfiguration("detail_1hour", oneHourCache)
                 .build();
     }
 }

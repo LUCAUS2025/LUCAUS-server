@@ -51,4 +51,21 @@ public class DetailedNoticesService {
 
         return dtoPage;
     }
+
+    @Cacheable(value = "detail_1hour", key = "#id")
+    public DetailedNoticesResponseDto getNoticeById(Long id) {
+        DetailedNotices notice = detailedNoticesRepository.findById(id)
+                .orElseThrow(() -> new GeneralHandler(ErrorCode.NOTICE_NOT_FOUND));
+
+        DetailedNoticesResponseDto dto = new DetailedNoticesResponseDto();
+        dto.setId(notice.getId());
+        dto.setCategory(notice.getCategory());
+        dto.setTitle(notice.getTitle());
+        dto.setContent(notice.getContent());
+        dto.setPhotoUrl(notice.getPhotoUrl());
+        dto.setUploadDateTime(notice.getUploadDateTime());
+
+        return dto;
+    }
+
 }
