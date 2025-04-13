@@ -43,4 +43,22 @@ public class DetailedNoticesController {
 
         return ApiResponse.onSuccess(noticesPage);
     }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "공지사항 상세 조회", description = "공지사항 ID를 이용해 상세 정보를 조회하는 API입니다. 더미데이터의 id는 730부터 시작합니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공적 조회",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "공지사항을 찾을 수 없음",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
+    })
+    public ApiResponse<DetailedNoticesResponseDto> getNoticeById(
+            @Parameter(description = "공지사항 ID", required = true) @PathVariable Long id) {
+
+        DetailedNoticesResponseDto notice = detailedNoticesService.getNoticeById(id);
+        return ApiResponse.onSuccess(notice);
+    }
+
 }
