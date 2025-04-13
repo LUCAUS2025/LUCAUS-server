@@ -93,6 +93,19 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
             HttpStatusCode status,
             WebRequest request) {
 
+        // VisitorNumRequestDto에서 Integer 형식이 아닌 값이 들어올 경우
+        if (ex.getCause() instanceof InvalidFormatException invalidFormatException &&
+                invalidFormatException.getTargetType().equals(Integer.class)) {
+            return handleExceptionInternalFalse(
+                    ex,
+                    ErrorCode.INVALID_VISITOR_NUM,
+                    HttpHeaders.EMPTY,
+                    ErrorCode.INVALID_VISITOR_NUM.getHttpStatus(),
+                    request,
+                    "방문자 수는 Integer."
+            );
+        }
+
         if (ex.getCause() instanceof InvalidFormatException invalidFormatException &&
                 invalidFormatException.getTargetType().equals(BoothReviewEnum.class)) {
             return handleExceptionInternalFalse(

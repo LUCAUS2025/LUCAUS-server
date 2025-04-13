@@ -31,7 +31,10 @@ public enum ErrorCode implements BaseErrorCode {
     NOT_FOUND_BOOTH(HttpStatus.NOT_FOUND, "BOOTH404", "조건에 맞는 부스를 찾을 수 없습니다."),
 
     // 푸드트럭 관련
-    NOT_FOUND_FOOD_TRUCK(HttpStatus.NOT_FOUND, "FOOD-TRUCK404", "조건에 맞는 푸드트럭을 찾을 수 없습니다.");
+    NOT_FOUND_FOOD_TRUCK(HttpStatus.NOT_FOUND, "FOOD-TRUCK404", "조건에 맞는 푸드트럭을 찾을 수 없습니다."),
+
+    // 방문자 수 관련
+    INVALID_VISITOR_NUM(HttpStatus.BAD_REQUEST, "VISITOR400", "방문자 수는 필수값 입니다.(Integer)");
 
 
 

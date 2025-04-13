@@ -1,5 +1,7 @@
 package com.likelion13.lucaus_api.service.visitor;
 
+import com.likelion13.lucaus_api.common.exception.ErrorCode;
+import com.likelion13.lucaus_api.common.exception.GeneralHandler;
 import com.likelion13.lucaus_api.domain.entity.visitor.VisitorsNum;
 import com.likelion13.lucaus_api.domain.repository.visitor.VisitorNumRepository;
 import com.likelion13.lucaus_api.dto.request.VisitorNumRequestDto;
@@ -23,6 +25,11 @@ public class VisitorNumServiceImpl implements VisitorNumService {
     }
 
     public String postNewestVisitorNum(VisitorNumRequestDto requestDto) {
+
+        if(requestDto.getVisitorNum() == null) {
+            throw new GeneralHandler(ErrorCode.INVALID_VISITOR_NUM);
+        }
+
         VisitorsNum newEntry = VisitorsNum.builder()
                 .updatedAt(LocalDateTime.now())
                 .visitorsNum(requestDto.getVisitorNum())
