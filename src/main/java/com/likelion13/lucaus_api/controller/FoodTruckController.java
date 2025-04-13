@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/food-truck")
 @RequiredArgsConstructor
-@Tag(name = "푸드트럭", description = "푸ㅡ트럭 관련 API입니다.")
+@Tag(name = "푸드트럭", description = "푸드트럭 관련 API입니다.")
 public class FoodTruckController {
 
     private final FoodTruckOpDateService foodTruckOpDateService;
@@ -84,7 +84,7 @@ public class FoodTruckController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
     })
     public ApiResponse<String> postFoodTruckReview(
-            @Parameter(description = "부스 고유 아이디(일자별 부스 번호X)", required = true) @PathVariable @NotNull Long foodTruckId,
+            @Parameter(description = "푸드트럭 고유 아이디(일자별 푸드트럭 번호X)", required = true) @PathVariable @NotNull Long foodTruckId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "RECOMMEND, DELICIOUS, MANY, FAST 의 조합을 리스트로 구성",
                     required = true,
