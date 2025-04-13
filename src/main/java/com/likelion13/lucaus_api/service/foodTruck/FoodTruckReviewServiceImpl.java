@@ -63,7 +63,7 @@ public class FoodTruckReviewServiceImpl implements FoodTruckReviewService {
 
         return switch (currentDay) {
             case MONDAY, TUESDAY, WEDNESDAY ,THURSDAY,FRIDAY -> currentTime.isAfter(start) && currentTime.isBefore(end);
-            default -> false; // 주말x
+            default -> true; // 주말x
         };
     }
 }

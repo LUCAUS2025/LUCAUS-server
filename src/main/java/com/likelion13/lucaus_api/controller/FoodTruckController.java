@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/food-truck")
 @RequiredArgsConstructor
-@Tag(name = "푸드트럭", description = "푸ㅡ트럭 관련 API입니다.")
+@Tag(name = "푸드트럭", description = "푸드트럭 관련 API입니다.")
 public class FoodTruckController {
 
     private final FoodTruckOpDateService foodTruckOpDateService;
