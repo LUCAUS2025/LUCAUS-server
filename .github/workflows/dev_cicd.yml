@@ -17,40 +17,16 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Print Current Directory
-        run: pwd
-
       - name: Create application.yml
         run: |
           mkdir -p $GITHUB_WORKSPACE/src/main/resources
           echo "${{ secrets.APPLICATION_YML }}" > $GITHUB_WORKSPACE/src/main/resources/application.yml
-        shell: bash
 
       - name: Grant execute permission for gradlew
         run: chmod +x $GITHUB_WORKSPACE/gradlew
 
-      - name: Build with Gradle (Debug Mode)
-        run: |
-          ./gradlew build --stacktrace --info
-          echo "Listing build/libs/ directory:"
-          ls -l $GITHUB_WORKSPACE/build/libs/
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: 'lucaus2025Server'
-          path: build/libs/*.jar
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: 'lucaus2025Server'
-          path: build/libs/
+      - name: Build with Gradle
+        run: ./gradlew build --stacktrace --info
 
       - name: Deploy to EC2
         env:
