@@ -23,8 +23,21 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .anyRequest().authenticated()
+                        // 인증 필요없는 곳 명시
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/swagger-ui.html",
+                                "/webjars/**"
+                        ).permitAll()
+
+                        // 인증 필요한 경로
+                        .requestMatchers("/api/stemp/**").authenticated()
+
+                        // 그 외에 모두 인증 필요x
+                        .anyRequest().permitAll()
                 );
         return http.build();
     }
