@@ -13,7 +13,7 @@ import lombok.*;
 public class User {
     @Id
     @Column(name = "id", nullable = false, unique = true)
-    private String id; // 아이디
+    private String id; // 아이디 // 수정테스트
 
     private String pw; // 비밀번호
 
