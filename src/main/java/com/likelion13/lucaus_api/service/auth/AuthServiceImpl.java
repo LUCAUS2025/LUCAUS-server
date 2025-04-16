@@ -1,14 +1,17 @@
 package com.likelion13.lucaus_api.service.auth;
 
-import com.likelion13.lucaus_api.domain.entity.stemp.StampBoard;
-import com.likelion13.lucaus_api.domain.entity.stemp.User;
-import com.likelion13.lucaus_api.domain.repository.stemp.UserRepository;
+import com.likelion13.lucaus_api.domain.entity.stemp.*;
+import com.likelion13.lucaus_api.domain.repository.stamp.*;
 import com.likelion13.lucaus_api.dto.request.auth.LoginRequestDto;
 import com.likelion13.lucaus_api.dto.request.auth.SignUpRequestDto;
 import com.likelion13.lucaus_api.security.JwtTokenProvider;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,10 +20,16 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
+    private final StampBoardRepository stampBoardRepository;
+    private final StampBoothRepository stampBoothRepository;
+    private final StampBoardBoothMappingRepository stampBoardBoothMappingRepository;
+
+    @Transactional
     public String signup(SignUpRequestDto request) {
         if (userRepository.existsById(request.getId())){
            throw new IllegalArgumentException("User already exists"); // 나중에 에러처리 바꾸기
         }
+        // 유저 등록
         User user = User.builder()
                 .id(request.getId()) // 아이디
                 .pw(passwordEncoder.encode(request.getPw())) // 비밀번호 해싱
@@ -28,6 +37,30 @@ public class AuthServiceImpl implements AuthService {
                 .studentId(request.getStudentId()) // 학번
                 .build();
         userRepository.save(user);
+
+        List<StampBooth> stampBooths = stampBoothRepository.findAll();
+
+        for (int type : List.of(1, 2)) {
+            StampBoard stampBoard = stampBoardRepository.save(
+                    StampBoard.builder()
+                            .type(type)
+                            .firstReward(false)
+                            .secondReward(false)
+                            .thirdReward(false)
+                            .user(user)
+                            .build()
+            );
+
+            List<StampBoardBoothMapping> mappings = stampBooths.stream()
+                    .map(booth -> StampBoardBoothMapping.builder()
+                            .stampBoard(stampBoard)
+                            .stampBooth(booth)
+                            .isClear(false)
+                            .build())
+                    .toList();
+
+            stampBoardBoothMappingRepository.saveAll(mappings);
+        }
 
         return "success";
     }

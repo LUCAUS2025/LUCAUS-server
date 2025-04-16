@@ -1,4 +1,4 @@
-package com.likelion13.lucaus_api.domain.repository.stemp;
+package com.likelion13.lucaus_api.domain.repository.stamp;
 
 import com.likelion13.lucaus_api.domain.entity.stemp.User;
 import org.springframework.data.jpa.repository.JpaRepository;

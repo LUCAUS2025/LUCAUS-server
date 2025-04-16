@@ -17,8 +17,15 @@ public class StampBoard {
 
     private Integer type; // 도장판 타입 1이면 19-20 / 2이면 21
 
-    @OneToMany(mappedBy = "stampBoard")
-    private Set<UserStampBoardMapping> userStampBoardMappings;
+    private Boolean firstReward; // 1차 수령
+
+    private Boolean secondReward; // 2차 수령
+
+    private Boolean thirdReward; // 3차 수령
+
+    @ManyToOne
+    @JoinColumn
+    private User user;
 
     @OneToMany(mappedBy = "stampBoard")
     private Set<StampBoardBoothMapping> stampBoardBoothMappings;

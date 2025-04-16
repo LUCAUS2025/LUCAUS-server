@@ -25,5 +25,5 @@ public class User {
     private String studentId; // 학번
 
     @OneToMany(mappedBy = "user")
-    private Set<UserStampBoardMapping> userStampBoardMappings;
+    private Set<StampBoard> stampBoards;
 }
