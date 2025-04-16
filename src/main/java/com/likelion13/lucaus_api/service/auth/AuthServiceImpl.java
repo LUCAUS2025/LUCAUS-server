@@ -1,5 +1,6 @@
 package com.likelion13.lucaus_api.service.auth;
 
+import com.likelion13.lucaus_api.domain.entity.stemp.StampBoard;
 import com.likelion13.lucaus_api.domain.entity.stemp.User;
 import com.likelion13.lucaus_api.domain.repository.stemp.UserRepository;
 import com.likelion13.lucaus_api.dto.request.auth.LoginRequestDto;

@@ -3,7 +3,10 @@ package com.likelion13.lucaus_api.domain.entity.stemp;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.*;
+
+import java.util.Set;
 
 @Entity
 @Getter
@@ -20,4 +23,7 @@ public class User {
     private String name; // 이름
 
     private String studentId; // 학번
+
+    @OneToMany(mappedBy = "user")
+    private Set<UserStampBoardMapping> userStampBoardMappings;
 }
