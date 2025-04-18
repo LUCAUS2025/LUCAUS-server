@@ -2,6 +2,7 @@ package com.likelion13.lucaus_api.service.auth;
 
 import com.likelion13.lucaus_api.domain.entity.stemp.*;
 import com.likelion13.lucaus_api.domain.repository.stamp.*;
+import com.likelion13.lucaus_api.domain.repository.user.UserRepository;
 import com.likelion13.lucaus_api.dto.request.auth.LoginRequestDto;
 import com.likelion13.lucaus_api.dto.request.auth.SignUpRequestDto;
 import com.likelion13.lucaus_api.security.JwtTokenProvider;
@@ -11,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
