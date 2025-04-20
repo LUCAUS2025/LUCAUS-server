@@ -1,5 +1,6 @@
-package com.likelion13.lucaus_api.domain.entity.stemp;
+package com.likelion13.lucaus_api.domain.entity.stamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +26,7 @@ public class StampBoard {
 
     @ManyToOne
     @JoinColumn
+    @JsonIgnore
     private User user;
 
     @OneToMany(mappedBy = "stampBoard")

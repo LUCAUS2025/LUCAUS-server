@@ -1,4 +1,4 @@
-package com.likelion13.lucaus_api.domain.entity.stemp;
+package com.likelion13.lucaus_api.domain.entity.stamp;
 
 import jakarta.persistence.*;
 import lombok.*;

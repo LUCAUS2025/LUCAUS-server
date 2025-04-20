@@ -1,5 +1,6 @@
-package com.likelion13.lucaus_api.domain.entity.stemp;
+package com.likelion13.lucaus_api.domain.entity.stamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,9 +18,11 @@ public class StampBoardBoothMapping {
 
     @ManyToOne
     @JoinColumn
+    @JsonIgnore
     private StampBooth stampBooth;
 
     @ManyToOne
     @JoinColumn
+    @JsonIgnore
     private StampBoard stampBoard;
 }
