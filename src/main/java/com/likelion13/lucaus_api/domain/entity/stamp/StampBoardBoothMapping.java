@@ -25,4 +25,8 @@ public class StampBoardBoothMapping {
     @JoinColumn
     @JsonIgnore
     private StampBoard stampBoard;
+
+    public void addStamp(){
+        this.isClear = true;
+    }
 }

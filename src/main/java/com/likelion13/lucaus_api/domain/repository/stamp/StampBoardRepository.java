@@ -15,4 +15,13 @@ public interface StampBoardRepository extends JpaRepository<StampBoard, Long> {
             "JOIN FETCH m.stampBooth " +
             "WHERE sb.user.id = :userId")
     List<StampBoard> findWithBoothMappingsByUserId(String userId);
+
+    @Query("SELECT DISTINCT sb FROM StampBoard sb " +
+            "JOIN FETCH sb.stampBoardBoothMappings m " +
+            "JOIN FETCH m.stampBooth " +
+            "WHERE sb.user.id = :userId and sb.type = :type ")
+    StampBoard findStampBoardByUserIdAndType(String userId, Integer type);
+
+
+
 }

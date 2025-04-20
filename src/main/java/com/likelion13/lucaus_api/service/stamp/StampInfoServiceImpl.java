@@ -8,11 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class StampServiceImpl implements StampService {
+public class StampInfoServiceImpl implements StampInfoService {
     private final StampBoardRepository stampBoardRepository;
 
     public List<StampBoardInfoResponseDto> getStampBoards(String userId) {
