@@ -3,6 +3,7 @@ package com.likelion13.lucaus_api.security;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +16,7 @@ public class JwtTokenProvider {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    private final long ACCESS_TOKEN_VALID_TIME = 1000L * 60 * 15; // 15분
+    private final long ACCESS_TOKEN_VALID_TIME = 1000L * 60 * 60 * 8; // 8시간
 
     @PostConstruct
     protected void init() {
@@ -32,5 +33,21 @@ public class JwtTokenProvider {
                 .setExpiration(expiry)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
+    }
+
+    public String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
+    public String getUserIdFromToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(secretKey) // base64 인코딩 되어 있어야 함
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject(); // 유저 ID 저장된 claim
     }
 }

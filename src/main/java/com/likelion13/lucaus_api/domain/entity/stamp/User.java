@@ -1,4 +1,4 @@
-package com.likelion13.lucaus_api.domain.entity.stemp;
+package com.likelion13.lucaus_api.domain.entity.stamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,5 +25,5 @@ public class User {
     private String studentId; // 학번
 
     @OneToMany(mappedBy = "user")
-    private Set<UserStampBoardMapping> userStampBoardMappings;
+    private Set<StampBoard> stampBoards;
 }
