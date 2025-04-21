@@ -1,5 +1,7 @@
 package com.likelion13.lucaus_api.service.stamp;
 
+import com.likelion13.lucaus_api.common.exception.ErrorCode;
+import com.likelion13.lucaus_api.common.exception.GeneralHandler;
 import com.likelion13.lucaus_api.domain.entity.stamp.RewardPw;
 import com.likelion13.lucaus_api.domain.entity.stamp.StampBoard;
 import com.likelion13.lucaus_api.domain.entity.stamp.StampBoardBoothMapping;
@@ -23,32 +25,34 @@ public class GetRewardServiceImpl implements GetRewardService {
         long clearCount = stampBoard.getStampBoardBoothMappings()
                 .stream().filter(StampBoardBoothMapping::getIsClear).count();
 
+        // 도장 개수 불충분
         if ((degree == 1 && clearCount < 3) || (degree == 2 && clearCount < 5) || (degree == 3 && clearCount < 9)) {
-            throw new IllegalStateException("도장이 충분하지 않습니다.");
+            throw new GeneralHandler(ErrorCode.NOT_ENOUGH_STAMP);
         }
 
+        // 잘못된 수령 차수
         RewardPw rewardPw = rewardPwRepository.findByDegree(degree);
         if (rewardPw == null) {
-            throw new IllegalArgumentException("유효하지 않은 상품 차수입니다.");
+            throw new GeneralHandler(ErrorCode.INVALID_DEGREE);
         }
         String rightPw = rewardPw.getPw();
 
         if (!rightPw.equals(pw)) {
-            return "비밀번호가 틀렸습니다.";
+            throw new GeneralHandler(ErrorCode.WRONG_PW);
         }
 
         switch (degree) {
             case 1:
-                if (stampBoard.getFirstReward()) throw new IllegalStateException("이미 1차 상품 수령했습니다.");
+                if (stampBoard.getFirstReward()) throw new GeneralHandler(ErrorCode.DUPLICATED_REWARD);
                 break;
             case 2:
-                if (stampBoard.getSecondReward()) throw new IllegalStateException("이미 2차 상품 수령했습니다.");
+                if (stampBoard.getSecondReward()) throw new GeneralHandler(ErrorCode.DUPLICATED_REWARD);
                 break;
             case 3:
-                if (stampBoard.getThirdReward()) throw new IllegalStateException("이미 3차 상품 수령했습니다.");
+                if (stampBoard.getThirdReward()) throw new GeneralHandler(ErrorCode.DUPLICATED_REWARD);
                 break;
             default:
-                throw new IllegalArgumentException("존재하지 않는 수령 차수입니다.");
+                throw new GeneralHandler(ErrorCode.INVALID_DEGREE);
         }
         stampBoard.getReward(degree);
         return "success";

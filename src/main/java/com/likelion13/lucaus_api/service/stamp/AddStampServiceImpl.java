@@ -1,5 +1,7 @@
 package com.likelion13.lucaus_api.service.stamp;
 
+import com.likelion13.lucaus_api.common.exception.ErrorCode;
+import com.likelion13.lucaus_api.common.exception.GeneralHandler;
 import com.likelion13.lucaus_api.domain.entity.stamp.StampBoard;
 import com.likelion13.lucaus_api.domain.entity.stamp.StampBoardBoothMapping;
 import com.likelion13.lucaus_api.domain.repository.stamp.StampBoardBoothMappingRepository;
@@ -22,15 +24,16 @@ public class AddStampServiceImpl implements AddStampService {
         StampBoardBoothMapping mapping = stampBoardBoothMappingRepository
                 .findByStampBoardAndStampBoothId(stampBoard, Long.valueOf(stampBoothId));
         if (mapping == null) {
-            return "부스를 찾을 수 없습니다.";
+            throw new GeneralHandler(ErrorCode.NOT_FOUND_BOOTH);
         }
         // 비밀번호 비교
         if (!mapping.getStampBooth().getPw().equals(pw)) {
-            return "비밀번호가 틀렸습니다.";
+            throw new GeneralHandler(ErrorCode.WRONG_PW);
         }
 
+        // 중복 도장
         if (mapping.getIsClear()) {
-            throw new IllegalStateException("이미 도장이 찍힌 부스입니다.");
+            throw new GeneralHandler(ErrorCode.DUPLICATED_STAMP);
         }
 
         mapping.addStamp(); // 도장 찍기

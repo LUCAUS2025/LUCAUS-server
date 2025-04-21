@@ -49,7 +49,17 @@ public enum ErrorCode implements BaseErrorCode {
 
     // 로그인 관련
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "LOGIN404", "존재하지 않는 ID입니다."),
-    WRONG_PW(HttpStatus.BAD_REQUEST, "LOGIN400", "잘못된 PW입니다.");
+
+    // pw관련
+    WRONG_PW(HttpStatus.BAD_REQUEST, "PW400", "잘못된 PW입니다."),
+
+    // 중복 도장
+    DUPLICATED_STAMP(HttpStatus.BAD_REQUEST, "STAMP400", "중복된 도장"),
+
+    // 상품 수령 관련
+    NOT_ENOUGH_STAMP(HttpStatus.BAD_REQUEST, "REWARD4001", "도장 개수 불충분"),
+    INVALID_DEGREE(HttpStatus.BAD_REQUEST, "REWARD4002", "잘못된 차수"),
+    DUPLICATED_REWARD(HttpStatus.BAD_REQUEST, "REWARD4003", "중복 수령");
 
 
     private final HttpStatus httpStatus;
