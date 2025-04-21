@@ -1,5 +1,7 @@
 package com.likelion13.lucaus_api.service.auth;
 
+import com.likelion13.lucaus_api.common.exception.ErrorCode;
+import com.likelion13.lucaus_api.common.exception.GeneralHandler;
 import com.likelion13.lucaus_api.domain.entity.stamp.*;
 import com.likelion13.lucaus_api.domain.repository.stamp.*;
 import com.likelion13.lucaus_api.domain.repository.user.UserRepository;
@@ -26,9 +28,31 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional
     public String signup(SignUpRequestDto request) {
-        if (userRepository.existsById(request.getId())){
-           throw new IllegalArgumentException("User already exists"); // 나중에 에러처리 바꾸기
+
+        // 아이디 정책 4자리 이상
+        if(request.getId().length() < 4) {
+            throw new GeneralHandler(ErrorCode.INVALID_ID_LENGTH);
         }
+
+        // 중복 id 생성 불가
+        if (userRepository.existsById(request.getId())){
+           throw new GeneralHandler(ErrorCode.DUPLICATED_ID);
+        }
+
+        // pw 정책 4자리 이상
+        if(request.getName().length() < 4) {
+            throw new GeneralHandler(ErrorCode.INVALID_PW_LENGTH);
+        }
+
+        String studentId = request.getStudentId();
+        // 학번 정책
+        if(studentId.length() < 8) {
+            throw new GeneralHandler(ErrorCode.INVALID_STUDENTNUM_LENGTH);
+        }
+        if (!studentId.matches("\\d+")) {
+            throw new GeneralHandler(ErrorCode.INVALID_STUDENTNUM_FORMAT);
+        }
+
         // 유저 등록
         User user = User.builder()
                 .id(request.getId()) // 아이디
@@ -67,9 +91,9 @@ public class AuthServiceImpl implements AuthService {
 
     public String login(LoginRequestDto request) {
         User user = userRepository.findById(request.getId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new GeneralHandler(ErrorCode.NOT_FOUND_USER));
         if (!passwordEncoder.matches(request.getPw(), user.getPw())) {
-            throw new IllegalArgumentException("Wrong password");// 나중에 에러처리 바꾸기
+            throw new GeneralHandler(ErrorCode.WRONG_PW);
         }
         return jwtTokenProvider.createToken(user.getId());
 

@@ -31,4 +31,20 @@ public class StampBoard {
 
     @OneToMany(mappedBy = "stampBoard")
     private Set<StampBoardBoothMapping> stampBoardBoothMappings;
+
+    public void getReward(Integer degree){
+        switch (degree) {
+            case 1:
+                this.firstReward = true;
+                break;
+            case 2:
+                this.secondReward = true;
+                break;
+            case 3:
+                this.thirdReward = true;
+                break;
+            default:
+                throw new IllegalArgumentException("존재하지 않는 수령 차수입니다.");
+        }
+    }
 }

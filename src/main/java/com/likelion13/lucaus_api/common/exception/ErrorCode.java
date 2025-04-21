@@ -36,8 +36,20 @@ public enum ErrorCode implements BaseErrorCode {
     NOT_FOUND_FOOD_TRUCK(HttpStatus.NOT_FOUND, "FOOD-TRUCK404", "조건에 맞는 푸드트럭을 찾을 수 없습니다."),
 
     // 방문자 수 관련
-    INVALID_VISITOR_NUM(HttpStatus.BAD_REQUEST, "VISITOR400", "방문자 수는 필수값 입니다.(Integer)");
+    INVALID_VISITOR_NUM(HttpStatus.BAD_REQUEST, "VISITOR400", "방문자 수는 필수값 입니다.(Integer)"),
 
+    // 회원가입 관련 정책
+    INVALID_ID_LENGTH(HttpStatus.BAD_REQUEST, "AUTH4001", "ID는 4자리 이상이어야 합니다."),
+    INVALID_PW_LENGTH(HttpStatus.BAD_REQUEST, "AUTH4002", "PW는 4자리 이상이어야 합니다."),
+    INVALID_STUDENTNUM_LENGTH(HttpStatus.BAD_REQUEST, "AUTH4003", "학번은 8자리 이상이어야 합니다."),
+    INVALID_STUDENTNUM_FORMAT(HttpStatus.BAD_REQUEST, "AUTH4004", "학번은 숫자로만 구성되어야 합니다."),
+
+    // 회원가입 에러
+    DUPLICATED_ID(HttpStatus.BAD_REQUEST, "AUTH4005", "중복된 아이디입니다."),
+
+    // 로그인 관련
+    NOT_FOUND_USER(HttpStatus.NOT_FOUND, "LOGIN404", "존재하지 않는 ID입니다."),
+    WRONG_PW(HttpStatus.BAD_REQUEST, "LOGIN400", "잘못된 PW입니다.");
 
 
     private final HttpStatus httpStatus;
