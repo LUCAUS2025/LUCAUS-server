@@ -40,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // pw 정책 4자리 이상
-        if(request.getName().length() < 4) {
+        if(request.getPw().length() < 4) {
             throw new GeneralHandler(ErrorCode.INVALID_PW_LENGTH);
         }
 
