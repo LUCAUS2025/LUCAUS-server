@@ -37,6 +37,8 @@ public class AuthController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "AUTH4005", description = "중복 아이디",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "AUTH4006", description = "이름 공백 불가",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
     })
     public ApiResponse<String> signup(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
