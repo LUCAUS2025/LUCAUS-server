@@ -43,6 +43,7 @@ public enum ErrorCode implements BaseErrorCode {
     INVALID_PW_LENGTH(HttpStatus.BAD_REQUEST, "AUTH4002", "PW는 4자리 이상이어야 합니다."),
     INVALID_STUDENTNUM_LENGTH(HttpStatus.BAD_REQUEST, "AUTH4003", "학번은 8자리 이상이어야 합니다."),
     INVALID_STUDENTNUM_FORMAT(HttpStatus.BAD_REQUEST, "AUTH4004", "학번은 숫자로만 구성되어야 합니다."),
+    INVALID_NAME_LENGTH(HttpStatus.BAD_REQUEST, "AUTH4006", "이름 공백 불가"),
 
     // 회원가입 에러
     DUPLICATED_ID(HttpStatus.BAD_REQUEST, "AUTH4005", "중복된 아이디입니다."),

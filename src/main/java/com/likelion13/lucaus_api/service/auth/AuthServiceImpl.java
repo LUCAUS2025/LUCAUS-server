@@ -44,6 +44,11 @@ public class AuthServiceImpl implements AuthService {
             throw new GeneralHandler(ErrorCode.INVALID_PW_LENGTH);
         }
 
+        // 이름 공백 불가
+        if(request.getName().isEmpty()) {
+            throw new GeneralHandler(ErrorCode.INVALID_NAME_LENGTH);
+        }
+
         String studentId = request.getStudentId();
         // 학번 정책
         if(studentId.length() < 8) {
