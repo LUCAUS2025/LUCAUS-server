@@ -19,6 +19,7 @@ public class DetailedNotices {
     private String title;
 
     @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String content;
     private String photoUrl;
     private String notionPhotoUrl;
