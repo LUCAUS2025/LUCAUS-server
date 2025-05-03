@@ -43,4 +43,13 @@ public interface BoothDetailRepository extends JpaRepository<Booth, Long> {
     WHERE brm.booth_id = :boothId
     """, nativeQuery = true)
     List<Object[]> findBoothReviewsByBoothId(@Param("boothId") Long boothId);
+
+    // boothId 기준 운영일자 리스트 조회
+    @Query(value = """
+    SELECT DISTINCT o.op_date
+    FROM op_date_booth o
+    WHERE o.booth_id = :boothId
+    ORDER BY o.op_date
+""", nativeQuery = true)
+    List<Integer> findOpDateListByBoothId(@Param("boothId") Long boothId);
 }

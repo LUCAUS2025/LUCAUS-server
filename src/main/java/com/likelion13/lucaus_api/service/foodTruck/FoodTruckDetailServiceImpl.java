@@ -62,6 +62,9 @@ public class FoodTruckDetailServiceImpl implements FoodTruckDetailService {
                 foodTruckReviewList.add(reviewMap);
             }
 
+            // opDateList 조회
+            List<Integer> opDateList = foodTruckDetailRepository.findOpDateListByFoodTruckId(foodTruckId);
+
             return new FoodTruckDetailResponseDto(
                     dayFoodTruckNum,
                     name,
@@ -69,7 +72,8 @@ public class FoodTruckDetailServiceImpl implements FoodTruckDetailService {
                     location,
                     foodTruckMenuList,
                     foodTruckReviewList,
-                    foodTruckId
+                    foodTruckId,
+                    opDateList
             );
         }).collect(Collectors.toList());
     }

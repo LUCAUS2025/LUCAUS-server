@@ -31,7 +31,7 @@ public class BoothDetailResponseDto {
 
     //private Integer detailLocation; // 세부위치 번호
 
-    // private List<Integer> opDateList; // 운영일자 리스트
+    private List<Integer> opDateList; // 운영일자 리스트
 
     //private Integer opTimeStart; // 운영시작시간 - 안줌
 

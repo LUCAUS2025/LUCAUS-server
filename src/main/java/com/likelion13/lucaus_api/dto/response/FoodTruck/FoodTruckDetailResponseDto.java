@@ -22,4 +22,6 @@ public class FoodTruckDetailResponseDto {
     private List<Map<String, Integer>> foodTruckReviews; // 푸드트럭리뷰
 
     private Long foodTruckId;
+
+    private List<Integer> opDateList; // 운영일자 리스트
 }

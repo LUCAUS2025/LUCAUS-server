@@ -38,4 +38,13 @@ public interface FoodTruckDetailRepository extends JpaRepository<FoodTruck, Long
     where ftrm.food_truck_id = :foodTruckId
 """, nativeQuery = true)
     List<Object[]> findFoodTruckReviewsByFoodTruckId(@Param("foodTruckId")Long foodTruckId);
+
+    // foodTruckId 기준 운영일자 리스트 조회
+    @Query(value = """
+    SELECT DISTINCT o.op_date
+    FROM op_date_food_truck o
+    WHERE o.food_truck_id = :foodTruckId
+    ORDER BY o.op_date
+""", nativeQuery = true)
+    List<Integer> findOpDateListByFoodTruckId(@Param("foodTruckId") Long foodTruckId);
 }

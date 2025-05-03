@@ -53,6 +53,10 @@ public class BoothDetailServiceImpl implements BoothDetailService {
                 boothReviewList.add(reviewMap);
             }
 
+
+            // opDateList 조회
+            List<Integer> opDateList = boothDetailRepository.findOpDateListByBoothId(boothId);
+
             // BoothDetailResponseDto 생성
             return new BoothDetailResponseDto(
                     dayBoothNumResult,
@@ -63,7 +67,8 @@ public class BoothDetailServiceImpl implements BoothDetailService {
                     location,
                     categories,
                     boothReviewList,
-                    boothId
+                    boothId,
+                    opDateList
             );
         }).collect(Collectors.toList());
     }
