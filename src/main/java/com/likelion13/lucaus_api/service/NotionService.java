@@ -181,7 +181,7 @@ public class NotionService {
         if (properties != null) {
             JSONObject titleObj = properties.optJSONObject("제목");
             if (titleObj != null) {
-                JSONArray titleTextArray = titleObj.optJSONArray("text");
+                JSONArray titleTextArray = titleObj.optJSONArray("title");
                 if (titleTextArray != null && titleTextArray.length() > 0) {
                     JSONObject firstTextObj = titleTextArray.optJSONObject(0);
                     if (firstTextObj != null) {
@@ -409,8 +409,8 @@ public class NotionService {
 
 
     // DetailedNotice 데이터를 주기적으로 가져오는 메서드
-    @Scheduled(cron = "0 0 0 * * *")
-//    @Scheduled(cron = "0 * * * * *")
+//    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 * * * * *")
     public void fetchDetailedNotices() {
 
         List<DetailedNoticeDto> detailedNotices = fetchNotionDataFromDatabaseId(notionConfig.getDetailedNoticesDbId(), DetailedNoticeDto.class);
@@ -428,7 +428,6 @@ public class NotionService {
                 detailedNoticesEntity.changePhotoUrl(detailedNoticeDto.getPhotoUrl());
                 detailedNoticesEntity.changeNotionPhotoUrl(detailedNoticeDto.getNotionPhotoUrl());
             } else {
-
                 detailedNoticesEntity = DetailedNotices.builder()
                         .category(detailedNoticeDto.getCategory())
                         .title(detailedNoticeDto.getTitle())
