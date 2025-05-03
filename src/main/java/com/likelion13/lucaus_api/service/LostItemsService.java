@@ -69,11 +69,12 @@ public class LostItemsService {
 
         LocalDate parsedDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
         LocalDateTime startOfDay = parsedDate.atStartOfDay();
-        LocalDateTime endOfDay = parsedDate.atTime(23, 59, 59, 999999999);
+        LocalDateTime endOfDay = parsedDate.plusDays(1).atStartOfDay();
+
 
         Page<LostItems> lostItemsPage;
         if ("TOTAL".equalsIgnoreCase(category)) {
-            lostItemsPage = lostItemsRepository.findByUpdatedDateTimeBetween(startOfDay, endOfDay, pageable);
+            lostItemsPage = lostItemsRepository.findByUpdatedDateTimeGreaterThanEqualAndUpdatedDateTimeLessThan(startOfDay, endOfDay, pageable);
         } else {
             Category categoryEnum;
             try {
