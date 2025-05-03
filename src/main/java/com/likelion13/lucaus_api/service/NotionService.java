@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -119,16 +120,25 @@ public class NotionService {
             }
         }
 
-        String createdTimeString = page.optString("created_time");
         LocalDateTime createdTime = null;
-        if (createdTimeString != null && !createdTimeString.isEmpty()) {
-            try {
-                DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-                createdTime = LocalDateTime.parse(createdTimeString, formatter);
-            } catch (Exception e) {
-                logger.error("Failed to parse created_time: {}", createdTimeString, e);
+        JSONObject timeObj = properties.optJSONObject("등록 일시");
+
+        if (timeObj != null) {
+            JSONObject dateObj = timeObj.optJSONObject("date");
+            if (dateObj != null) {
+                String startDateStr = dateObj.optString("start");
+
+                if (startDateStr != null && !startDateStr.isEmpty()) {
+                    try {
+                        LocalDate date = LocalDate.parse(startDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                        createdTime = date.atStartOfDay();
+                    } catch (Exception e) {
+                        logger.error("Failed to parse 등록 일시: {}", startDateStr, e);
+                    }
+                }
             }
         }
+
         String notionId = page.optString("id");
 
         return ShortNoticeDto.builder()
@@ -251,16 +261,7 @@ public class NotionService {
 
         String notionId = page.optString("id");
 
-        String updatedTimeString = page.optString("created_time");
-        LocalDateTime updatedDateTime = null;
-        if (updatedTimeString != null && !updatedTimeString.isEmpty()) {
-            try {
-                DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-                updatedDateTime = LocalDateTime.parse(updatedTimeString, formatter);
-            } catch (Exception e) {
-                logger.error("Failed to parse created_time: {}", updatedTimeString, e);
-            }
-        }
+
 
         String category = "OTHERS";
         JSONObject categoryObj = properties.optJSONObject("카테고리");
@@ -297,6 +298,25 @@ public class NotionService {
             JSONArray richTextArray = placeObj.optJSONArray("rich_text");
             if (richTextArray != null && richTextArray.length() > 0) {
                 place = richTextArray.optJSONObject(0).optJSONObject("text").optString("content");
+            }
+        }
+
+        LocalDateTime updatedDateTime = null;
+        JSONObject timeObj = properties.optJSONObject("접수 일자");
+
+        if (timeObj != null) {
+            JSONObject dateObj = timeObj.optJSONObject("date");
+            if (dateObj != null) {
+                String startDateStr = dateObj.optString("start");
+
+                if (startDateStr != null && !startDateStr.isEmpty()) {
+                    try {
+                        LocalDate date = LocalDate.parse(startDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                        updatedDateTime = date.atStartOfDay();
+                    } catch (Exception e) {
+                        logger.error("Failed to parse 접수 일자: {}", startDateStr, e);
+                    }
+                }
             }
         }
 
@@ -359,9 +379,9 @@ public class NotionService {
 
 
     //     ShortNotice 데이터를 주기적으로 가져오는 메서드
-    @Scheduled(cron = "0 0 0 * * *")
+//    @Scheduled(cron = "0 0 0 * * *")
 
-//    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 * * * * *")
     public void fetchShortNotices() {
         List<ShortNoticeDto> shortNotices = fetchNotionDataFromDatabaseId(notionConfig.getShortNoticesDbId(), ShortNoticeDto.class);
 
