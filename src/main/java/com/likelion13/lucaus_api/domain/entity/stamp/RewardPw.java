@@ -16,6 +16,8 @@ public class RewardPw {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Integer type; // 도장판 일자 타입
+
     private Integer degree;// 차수
 
     private String pw; // 비밀번호
