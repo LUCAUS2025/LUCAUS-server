@@ -31,7 +31,7 @@ public class GetRewardServiceImpl implements GetRewardService {
         }
 
         // 잘못된 수령 차수
-        RewardPw rewardPw = rewardPwRepository.findByDegree(degree);
+        RewardPw rewardPw = rewardPwRepository.findByTypeAndDegree(type,degree);
         if (rewardPw == null) {
             throw new GeneralHandler(ErrorCode.INVALID_DEGREE);
         }

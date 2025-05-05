@@ -6,6 +6,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource(exported = false)
 public interface RewardPwRepository extends JpaRepository<RewardPw, Long> {
-    RewardPw findByDegree(Integer degree);
+    RewardPw findByTypeAndDegree(Integer type, Integer degree);
 
 }

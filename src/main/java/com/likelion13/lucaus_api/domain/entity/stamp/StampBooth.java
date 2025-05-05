@@ -17,6 +17,8 @@ public class StampBooth {
 
     private String name; // 부스이름
 
+    private Integer type; // 도장판 일자 타입
+
     private String pw; // 도장 인증 비밀번호
 
     @OneToMany(mappedBy = "stampBooth")

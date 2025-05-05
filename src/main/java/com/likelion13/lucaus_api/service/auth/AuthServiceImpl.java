@@ -60,16 +60,24 @@ public class AuthServiceImpl implements AuthService {
 
         // 유저 등록
         User user = User.builder()
-                .id(request.getId()) // 아이디
-                .pw(passwordEncoder.encode(request.getPw())) // 비밀번호 해싱
-                .name(request.getName()) // 이름
-                .studentId(request.getStudentId()) // 학번
+                .id(request.getId())
+                .pw(passwordEncoder.encode(request.getPw()))
+                .name(request.getName())
+                .studentId(request.getStudentId())
                 .build();
         userRepository.save(user);
 
-        List<StampBooth> stampBooths = stampBoothRepository.findAll();
-
         for (int type : List.of(1, 2)) {
+            // type별 boothId 필터링
+            List<StampBooth> filteredBooths = stampBoothRepository.findAll().stream()
+                    .filter(booth -> {
+                        Long boothId = booth.getId();
+                        if (type == 1) return boothId >= 1 && boothId <= 9;
+                        if (type == 2) return boothId >= 11 && boothId <= 19;
+                        return false;
+                    })
+                    .toList();
+
             StampBoard stampBoard = stampBoardRepository.save(
                     StampBoard.builder()
                             .type(type)
@@ -80,7 +88,7 @@ public class AuthServiceImpl implements AuthService {
                             .build()
             );
 
-            List<StampBoardBoothMapping> mappings = stampBooths.stream()
+            List<StampBoardBoothMapping> mappings = filteredBooths.stream()
                     .map(booth -> StampBoardBoothMapping.builder()
                             .stampBoard(stampBoard)
                             .stampBooth(booth)

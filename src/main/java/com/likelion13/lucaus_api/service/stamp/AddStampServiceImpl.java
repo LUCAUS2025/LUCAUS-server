@@ -21,8 +21,11 @@ public class AddStampServiceImpl implements AddStampService {
     public String addStamp(String userId, Integer type, Integer stampBoothId, String pw){
         StampBoard stampBoard = stampBoardRepository.findStampBoardByUserIdAndType(userId, type);
 
+        // type이 2이면 boothId에 10 더하기
+        Long actualBoothId = (type == 2) ? stampBoothId + 10L : stampBoothId.longValue();
+
         StampBoardBoothMapping mapping = stampBoardBoothMappingRepository
-                .findByStampBoardAndStampBoothId(stampBoard, Long.valueOf(stampBoothId));
+                .findByStampBoardAndStampBoothId(stampBoard, actualBoothId);
         if (mapping == null) {
             throw new GeneralHandler(ErrorCode.NOT_FOUND_BOOTH);
         }
