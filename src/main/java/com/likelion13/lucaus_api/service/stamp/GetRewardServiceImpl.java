@@ -26,9 +26,17 @@ public class GetRewardServiceImpl implements GetRewardService {
                 .stream().filter(StampBoardBoothMapping::getIsClear).count();
 
         // 도장 개수 불충분
-        if ((degree == 1 && clearCount < 3) || (degree == 2 && clearCount < 5) || (degree == 3 && clearCount < 9)) {
-            throw new GeneralHandler(ErrorCode.NOT_ENOUGH_STAMP);
+        if(type == 1){
+            if ((degree == 1 && clearCount < 3) || (degree == 2 && clearCount < 5) || (degree == 3 && clearCount < 7)) {
+                throw new GeneralHandler(ErrorCode.NOT_ENOUGH_STAMP);
+            }
+        } else if (type == 2){
+            if ((degree == 1 && clearCount < 2) || (degree == 2 && clearCount < 4) || (degree == 3 && clearCount < 6)) {
+                throw new GeneralHandler(ErrorCode.NOT_ENOUGH_STAMP);
+            }
         }
+
+
 
         // 잘못된 수령 차수
         RewardPw rewardPw = rewardPwRepository.findByTypeAndDegree(type,degree);
