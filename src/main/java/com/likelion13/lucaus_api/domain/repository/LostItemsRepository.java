@@ -14,8 +14,8 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource(exported = false)
 public interface LostItemsRepository extends JpaRepository<LostItems, Long> {
 
-    Page<LostItems> findByCategoryAndUpdatedDateTimeBetween(
-            Category category, LocalDateTime startOfDay, LocalDateTime endOfDay, Pageable pageable);
+    Page<LostItems> findByCategoryAndUpdatedDateTimeGreaterThanEqualAndUpdatedDateTimeLessThan(
+            Category category, LocalDateTime start, LocalDateTime end, Pageable pageable);
 
     Page<LostItems> findByUpdatedDateTimeGreaterThanEqualAndUpdatedDateTimeLessThan(
             LocalDateTime start, LocalDateTime end, Pageable pageable);
