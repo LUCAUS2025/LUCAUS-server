@@ -83,7 +83,7 @@ public class LostItemsService {
                 throw new IllegalArgumentException("Invalid category: " + category);
             }
 
-            lostItemsPage = lostItemsRepository.findByCategoryAndUpdatedDateTimeBetween(categoryEnum, startOfDay, endOfDay, pageable);
+            lostItemsPage = lostItemsRepository.findByCategoryAndUpdatedDateTimeGreaterThanEqualAndUpdatedDateTimeLessThan(categoryEnum, startOfDay, endOfDay, pageable);
         }
 
         return lostItemsPage.map(lostItem -> {
