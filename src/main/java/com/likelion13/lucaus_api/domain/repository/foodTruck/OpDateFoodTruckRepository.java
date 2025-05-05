@@ -39,7 +39,7 @@ public interface OpDateFoodTruckRepository extends JpaRepository<OpDateFoodTruck
     select ftrm.food_truck_id, ftrm.like_num
     from food_truck_review_mapping ftrm
     join food_truck_review ftr on ftrm.food_truck_review_id = ftr.id
-    where ftrm.food_truck_id in :foodTruckIds and ftr.food_truck_review_tag = 'RECOMMENDED'
+    where ftrm.food_truck_id in :foodTruckIds and ftr.food_truck_review_tag = 'RECOMMEND'
     """, nativeQuery = true)
     List<Object[]> findRecommendByFoodTruckIds(@Param("foodTruckIds") List<Long> foodTruckIds);
 }
