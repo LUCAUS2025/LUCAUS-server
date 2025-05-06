@@ -74,7 +74,7 @@ public class LostItemsService {
 
         Page<LostItems> lostItemsPage;
         if ("TOTAL".equalsIgnoreCase(category)) {
-            lostItemsPage = lostItemsRepository.findByUpdatedDateTimeGreaterThanEqualAndUpdatedDateTimeLessThan(startOfDay, endOfDay, pageable);
+            lostItemsPage = lostItemsRepository.findByUpdatedDateTimeGreaterThanEqualAndUpdatedDateTimeLessThanAndOwnerFoundFalse(startOfDay, endOfDay, pageable);
         } else {
             Category categoryEnum;
             try {
@@ -83,7 +83,7 @@ public class LostItemsService {
                 throw new IllegalArgumentException("Invalid category: " + category);
             }
 
-            lostItemsPage = lostItemsRepository.findByCategoryAndUpdatedDateTimeGreaterThanEqualAndUpdatedDateTimeLessThan(categoryEnum, startOfDay, endOfDay, pageable);
+            lostItemsPage = lostItemsRepository.findByCategoryAndUpdatedDateTimeGreaterThanEqualAndUpdatedDateTimeLessThanAndOwnerFoundFalse(categoryEnum, startOfDay, endOfDay, pageable);
         }
 
         return lostItemsPage.map(lostItem -> {

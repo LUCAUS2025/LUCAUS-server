@@ -14,10 +14,10 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource(exported = false)
 public interface LostItemsRepository extends JpaRepository<LostItems, Long> {
 
-    Page<LostItems> findByCategoryAndUpdatedDateTimeGreaterThanEqualAndUpdatedDateTimeLessThan(
-            Category category, LocalDateTime start, LocalDateTime end, Pageable pageable);
+    Page<LostItems> findByCategoryAndUpdatedDateTimeGreaterThanEqualAndUpdatedDateTimeLessThanAndOwnerFoundFalse(
+        Category category, LocalDateTime start, LocalDateTime end, Pageable pageable);
 
-    Page<LostItems> findByUpdatedDateTimeGreaterThanEqualAndUpdatedDateTimeLessThan(
+    Page<LostItems> findByUpdatedDateTimeGreaterThanEqualAndUpdatedDateTimeLessThanAndOwnerFoundFalse(
             LocalDateTime start, LocalDateTime end, Pageable pageable);
 
     Optional<LostItems> findByNotionId(String notionId);

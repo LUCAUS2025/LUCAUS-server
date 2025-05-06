@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -35,8 +36,9 @@ public class DetailedNoticesService {
             throw new GeneralHandler(ErrorCode.INVALID_PAGE_SIZE);
         }
 
-        Pageable pageable = PageRequest.of(page - 1, size);
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "uploadDateTime"));
         Page<DetailedNotices> noticesPage = detailedNoticesRepository.findAll(pageable);
+
 
         Page<DetailedNoticesResponseDto> dtoPage = noticesPage.map(notice -> {
             DetailedNoticesResponseDto dto = new DetailedNoticesResponseDto();
