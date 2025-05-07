@@ -1,9 +1,9 @@
-package com.likelion13.lucaus_api.service;
+package com.likelion13.lucaus_api.service.lostItems;
 
 import com.likelion13.lucaus_api.common.exception.ErrorCode;
 import com.likelion13.lucaus_api.common.exception.GeneralHandler;
-import com.likelion13.lucaus_api.domain.entity.LostItems;
-import com.likelion13.lucaus_api.domain.repository.LostItemsRepository;
+import com.likelion13.lucaus_api.domain.entity.lostItems.LostItems;
+import com.likelion13.lucaus_api.domain.repository.lostItems.LostItemsRepository;
 import com.likelion13.lucaus_api.dto.response.LostItemsResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import com.likelion13.lucaus_api.domain.entity.LostItems.Category;
+import com.likelion13.lucaus_api.domain.entity.lostItems.LostItems.Category;
 @Service
 public class LostItemsService {
 

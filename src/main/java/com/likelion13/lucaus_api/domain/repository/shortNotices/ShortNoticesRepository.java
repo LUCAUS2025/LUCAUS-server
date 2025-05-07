@@ -1,5 +1,5 @@
-package com.likelion13.lucaus_api.domain.repository;
-import com.likelion13.lucaus_api.domain.entity.ShortNotices;
+package com.likelion13.lucaus_api.domain.repository.shortNotices;
+import com.likelion13.lucaus_api.domain.entity.shortNotices.ShortNotices;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 

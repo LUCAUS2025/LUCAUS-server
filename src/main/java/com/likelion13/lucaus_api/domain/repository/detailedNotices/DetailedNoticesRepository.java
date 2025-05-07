@@ -1,7 +1,7 @@
-package com.likelion13.lucaus_api.domain.repository;
+package com.likelion13.lucaus_api.domain.repository.detailedNotices;
 
 
-import com.likelion13.lucaus_api.domain.entity.DetailedNotices;
+import com.likelion13.lucaus_api.domain.entity.detailedNotices.DetailedNotices;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

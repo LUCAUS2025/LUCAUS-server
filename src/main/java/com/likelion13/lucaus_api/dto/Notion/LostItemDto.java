@@ -1,7 +1,7 @@
 package com.likelion13.lucaus_api.dto.Notion;
 
 
-import com.likelion13.lucaus_api.domain.entity.LostItems;
+import com.likelion13.lucaus_api.domain.entity.lostItems.LostItems;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

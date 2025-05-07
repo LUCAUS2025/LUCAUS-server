@@ -1,12 +1,13 @@
-package com.likelion13.lucaus_api.service;
+package com.likelion13.lucaus_api.service.notion;
 
 import com.likelion13.lucaus_api.common.config.NotionConfig;
-import com.likelion13.lucaus_api.domain.repository.DetailedNoticesRepository;
-import com.likelion13.lucaus_api.domain.repository.LostItemsRepository;
-import com.likelion13.lucaus_api.domain.repository.ShortNoticesRepository;
+import com.likelion13.lucaus_api.domain.repository.detailedNotices.DetailedNoticesRepository;
+import com.likelion13.lucaus_api.domain.repository.lostItems.LostItemsRepository;
+import com.likelion13.lucaus_api.domain.repository.shortNotices.ShortNoticesRepository;
 import com.likelion13.lucaus_api.dto.Notion.DetailedNoticeDto;
 import com.likelion13.lucaus_api.dto.Notion.LostItemDto;
 import com.likelion13.lucaus_api.dto.Notion.ShortNoticeDto;
+import com.likelion13.lucaus_api.service.s3.S3Service;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -27,9 +28,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-import com.likelion13.lucaus_api.domain.entity.ShortNotices;
-import com.likelion13.lucaus_api.domain.entity.DetailedNotices;
-import com.likelion13.lucaus_api.domain.entity.LostItems;
+import com.likelion13.lucaus_api.domain.entity.shortNotices.ShortNotices;
+import com.likelion13.lucaus_api.domain.entity.detailedNotices.DetailedNotices;
+import com.likelion13.lucaus_api.domain.entity.lostItems.LostItems;
 
 @Service
 public class NotionService {

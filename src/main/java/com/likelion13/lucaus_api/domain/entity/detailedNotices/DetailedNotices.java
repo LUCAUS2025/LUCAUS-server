@@ -1,4 +1,4 @@
-package com.likelion13.lucaus_api.domain.entity;
+package com.likelion13.lucaus_api.domain.entity.detailedNotices;
 
 import jakarta.persistence.*;
 import lombok.*;

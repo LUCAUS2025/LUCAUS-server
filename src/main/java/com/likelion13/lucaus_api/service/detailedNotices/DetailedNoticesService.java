@@ -1,11 +1,10 @@
-package com.likelion13.lucaus_api.service;
+package com.likelion13.lucaus_api.service.detailedNotices;
 
 import com.likelion13.lucaus_api.common.exception.ErrorCode;
 import com.likelion13.lucaus_api.common.exception.GeneralHandler;
-import com.likelion13.lucaus_api.domain.entity.DetailedNotices;
-import com.likelion13.lucaus_api.domain.repository.DetailedNoticesRepository;
+import com.likelion13.lucaus_api.domain.entity.detailedNotices.DetailedNotices;
+import com.likelion13.lucaus_api.domain.repository.detailedNotices.DetailedNoticesRepository;
 import com.likelion13.lucaus_api.dto.response.DetailedNoticesResponseDto;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;

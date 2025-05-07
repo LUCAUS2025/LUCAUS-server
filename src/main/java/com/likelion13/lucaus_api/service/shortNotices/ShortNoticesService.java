@@ -1,7 +1,7 @@
-package com.likelion13.lucaus_api.service;
+package com.likelion13.lucaus_api.service.shortNotices;
 
-import com.likelion13.lucaus_api.domain.entity.ShortNotices;
-import com.likelion13.lucaus_api.domain.repository.ShortNoticesRepository;
+import com.likelion13.lucaus_api.domain.entity.shortNotices.ShortNotices;
+import com.likelion13.lucaus_api.domain.repository.shortNotices.ShortNoticesRepository;
 import com.likelion13.lucaus_api.dto.response.ShortNoticesResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
