@@ -70,10 +70,11 @@ public class BoothOpDateServiceImpl implements BoothOpDateService {
             Long boothId = ((Number) row[1]).longValue();
             String name = (String) row[2];
             String owner = (String) row[3];
+            String location = (String) row[4];
             List<String> categories = categoriesMap.getOrDefault(boothId, List.of());
             Integer recommendNums = recommendMap.getOrDefault(boothId, 0);
 
-            return new BoothListByDateResponseDto(dayBoothNum, name, owner, categories, recommendNums);
+            return new BoothListByDateResponseDto(dayBoothNum, name, owner, categories, recommendNums, location);
         }).collect(Collectors.toList());
     }
 }

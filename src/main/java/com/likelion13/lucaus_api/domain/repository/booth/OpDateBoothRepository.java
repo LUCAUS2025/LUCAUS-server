@@ -18,7 +18,8 @@ public interface OpDateBoothRepository extends JpaRepository<OpDateBooth, Long> 
     SELECT o.day_booth_num AS dayBoothNum,
            b.id AS boothId,
            b.name AS name,
-           b.owner AS owner
+           b.owner AS owner,
+           o.location AS location
     FROM op_date_booth o
     JOIN booth b ON o.booth_id = b.id
     WHERE o.op_date = :opDate

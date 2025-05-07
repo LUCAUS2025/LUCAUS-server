@@ -15,7 +15,8 @@ public interface OpDateFoodTruckRepository extends JpaRepository<OpDateFoodTruck
     @Query(value = """
     select o.day_food_truck_num as dayFoodTruckNum,
        f.id as foodTruckId,
-       f.name as name
+       f.name as name,
+       o.location as location
     from op_date_food_truck o
     join food_truck f on o.food_truck_id = f.id
     where o.op_date = :opDate
