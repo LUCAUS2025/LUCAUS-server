@@ -1,14 +1,13 @@
-package com.likelion13.lucaus_api.domain.repository;
+package com.likelion13.lucaus_api.domain.repository.lostItems;
 
-import com.likelion13.lucaus_api.domain.entity.LostItems;
-import com.likelion13.lucaus_api.domain.entity.ShortNotices;
+import com.likelion13.lucaus_api.domain.entity.lostItems.LostItems;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import com.likelion13.lucaus_api.domain.entity.LostItems.Category;
+import com.likelion13.lucaus_api.domain.entity.lostItems.LostItems.Category;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource(exported = false)

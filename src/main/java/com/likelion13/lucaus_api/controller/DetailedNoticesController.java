@@ -1,7 +1,7 @@
 package com.likelion13.lucaus_api.controller;
 
 import com.likelion13.lucaus_api.dto.response.DetailedNoticesResponseDto;
-import com.likelion13.lucaus_api.service.DetailedNoticesService;
+import com.likelion13.lucaus_api.service.detailedNotices.DetailedNoticesService;
 import com.likelion13.lucaus_api.common.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

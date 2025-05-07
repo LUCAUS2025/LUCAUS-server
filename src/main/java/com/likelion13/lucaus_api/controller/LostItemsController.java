@@ -2,7 +2,7 @@ package com.likelion13.lucaus_api.controller;
 
 import com.likelion13.lucaus_api.common.exception.GeneralHandler;
 import com.likelion13.lucaus_api.dto.response.LostItemsResponseDto;
-import com.likelion13.lucaus_api.service.LostItemsService;
+import com.likelion13.lucaus_api.service.lostItems.LostItemsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

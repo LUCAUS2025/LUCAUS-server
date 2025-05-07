@@ -1,10 +1,8 @@
 package com.likelion13.lucaus_api.dto.response;
 
-import com.likelion13.lucaus_api.domain.entity.LostItems;
+import com.likelion13.lucaus_api.domain.entity.lostItems.LostItems;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 import java.io.Serializable;
 

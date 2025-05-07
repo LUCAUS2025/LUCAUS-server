@@ -1,4 +1,4 @@
-package com.likelion13.lucaus_api.service;
+package com.likelion13.lucaus_api.service.s3;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
