@@ -14,7 +14,8 @@ import java.util.List;
 public class BoothListByDateResponseDto {
     private Integer dayBoothNum;
     private String name;
-    private String info;
+    //private String info;
+    private String owner;
     private List<String> categories;
     private Integer recommendNum;
 }
