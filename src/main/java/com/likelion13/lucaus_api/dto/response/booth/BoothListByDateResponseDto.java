@@ -18,4 +18,5 @@ public class BoothListByDateResponseDto {
     private String owner;
     private List<String> categories;
     private Integer recommendNum;
+    private String location;
 }

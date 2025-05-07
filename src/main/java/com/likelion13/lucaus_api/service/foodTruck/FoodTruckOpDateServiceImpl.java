@@ -69,10 +69,11 @@ public class FoodTruckOpDateServiceImpl implements FoodTruckOpDateService {
             Integer dayFoodTruckNum = (Integer) row[0];
             Long foodTruckId = ((Number) row[1]).longValue();
             String name = (String) row[2];
+            String location = (String) row[3];
             List<String> representMenu = menusMap.getOrDefault(foodTruckId, List.of());
             Integer recommendNum = recommendMap.get(foodTruckId);
 
-            return new FoodTruckListByDateResponseDto(dayFoodTruckNum, name, representMenu, recommendNum);
+            return new FoodTruckListByDateResponseDto(dayFoodTruckNum, name, representMenu, recommendNum, location);
         }).collect(Collectors.toList());
 
     }
