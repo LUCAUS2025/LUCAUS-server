@@ -19,9 +19,9 @@ public class BoothDetailServiceImpl implements BoothDetailService {
     public List<BoothDetailResponseDto> getBoothDetailByOpDateAndDayBoothNum(Integer opDate, Integer dayBoothNum) {
 
         // 운영일자 어긋난 경우
-        if(!(opDate >=19 && opDate <=23)) {
-            throw new GeneralHandler(ErrorCode.INVALID_OP_DATE);
-        }
+//        if(!(opDate >=19 && opDate <=23)) {
+//            throw new GeneralHandler(ErrorCode.INVALID_OP_DATE);
+//        }
 
         List<Object[]> results = boothDetailRepository.findBoothDetailByOpDateAndDayBoothNum(opDate, dayBoothNum);
 

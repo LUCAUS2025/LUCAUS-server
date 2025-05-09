@@ -22,9 +22,9 @@ public class FoodTruckOpDateServiceImpl implements FoodTruckOpDateService {
     public List<FoodTruckListByDateResponseDto> getFoodTruckListByDate(Integer opDate) {
 
         // 운영일자 잘못된 경우
-        if(!(opDate >=19 && opDate <=23)) {
-            throw new GeneralHandler(ErrorCode.INVALID_OP_DATE);
-        }
+//        if(!(opDate >=19 && opDate <=23)) {
+//            throw new GeneralHandler(ErrorCode.INVALID_OP_DATE);
+//        }
 
         // 푸드트럭 정보 조회
         List<Object[]> foodTruckResults = opDateFoodTruckRepository.findFoodTruckListByOpDate(opDate);

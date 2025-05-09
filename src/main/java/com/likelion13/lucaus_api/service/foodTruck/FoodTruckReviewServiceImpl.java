@@ -26,9 +26,9 @@ public class FoodTruckReviewServiceImpl implements FoodTruckReviewService {
     public String postFoodTruckReview(Long foodTruckId, FoodTruckReviewRequestDto reviewRequest) {
 
         // 리뷰 달 수 없는 시간
-        if (!isValidTime()) {
-            throw new GeneralHandler(ErrorCode.INVALID_REVIEW_TIME);
-        }
+//        if (!isValidTime()) {
+//            throw new GeneralHandler(ErrorCode.INVALID_REVIEW_TIME);
+//        }
 
         FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId).orElse(null);
 

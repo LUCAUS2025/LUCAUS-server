@@ -22,9 +22,9 @@ public class BoothOpDateServiceImpl implements BoothOpDateService {
     public List<BoothListByDateResponseDto> getBoothListByDate(Integer opDate) {
 
         // 운영일자 잘못된 경우
-        if(!(opDate >=19 && opDate <=23)) {
-            throw new GeneralHandler(ErrorCode.INVALID_OP_DATE);
-        }
+//        if(!(opDate >=19 && opDate <=23)) {
+//            throw new GeneralHandler(ErrorCode.INVALID_OP_DATE);
+//        }
 
         // 부스 정보 조회
         List<Object[]> boothResults = opDateBoothRepository.findBoothListByOpDate(opDate);
