@@ -22,9 +22,9 @@ public class FoodTruckDetailServiceImpl implements FoodTruckDetailService {
     public List<FoodTruckDetailResponseDto> getFoodTruckDetailByOpDateAndDayFoodTruckNum(Integer opDate, Integer dayFoodTruckNum){
 
         // 운영일자 어긋난 경우
-        if(!(opDate >=19 && opDate <=23)) {
-            throw new GeneralHandler(ErrorCode.INVALID_OP_DATE);
-        }
+//        if(!(opDate >=19 && opDate <=23)) {
+//            throw new GeneralHandler(ErrorCode.INVALID_OP_DATE);
+//        }
 
         List<Object[]> results = foodTruckDetailRepository.findFoodTruckDetailByOpDateAndDayFoodTruckNum(opDate,dayFoodTruckNum);
 
