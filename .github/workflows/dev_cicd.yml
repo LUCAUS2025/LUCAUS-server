@@ -2,7 +2,7 @@ name: lucaus_dev_cicd
 
 on:
   push:
-    branches: [ main ]
+    branches: [ dev ]
 
 jobs:
   build:
