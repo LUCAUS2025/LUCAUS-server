@@ -36,3 +36,4 @@ jobs:
         run: |
           jar_file=$(find build/libs -name '*.jar' ! -name '*plain.jar' | head -n 1)
           aws s3 cp "$jar_file" s3://lucaus-deploy-bucket/lucaus2025Server.jar --region $AWS_REGION
+          aws s3 cp "$GITHUB_WORKSPACE/src/main/resources/application.yml" s3://lucaus-deploy-bucket/application.yml --region $AWS_REGION
