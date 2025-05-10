@@ -25,7 +25,7 @@ public class DetailedNoticesService {
     }
 
     @Cacheable(
-            value = "detail_5min",
+            value = "notice_list_10min",
             key = "#page + '-' + #size",
             condition = "#page > 0 && #size > 0"
     )
@@ -53,7 +53,7 @@ public class DetailedNoticesService {
         return dtoPage;
     }
 
-    @Cacheable(value = "detail_1hour", key = "#id")
+    @Cacheable(value = "notice_detail_10min", key = "#id")
     public DetailedNoticesResponseDto getNoticeById(Long id) {
         DetailedNotices notice = detailedNoticesRepository.findById(id)
                 .orElseThrow(() -> new GeneralHandler(ErrorCode.NOTICE_NOT_FOUND));
