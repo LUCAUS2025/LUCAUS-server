@@ -1,0 +1,46 @@
+name: lucaus_dev_cicd
+
+on:
+  push:
+    branches: [ dev ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Create application.yml
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/src/main/resources
+          echo "${{ secrets.APPLICATION_YML }}" > $GITHUB_WORKSPACE/src/main/resources/application.yml
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x $GITHUB_WORKSPACE/gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build --stacktrace --info
+
+      - name: Deploy to EC2
+        env:
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+        run: |
+          echo "$EC2_SSH_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          jar_file=$(find build/libs -name '*.jar' ! -name '*plain.jar' | head -n 1)
+          scp -i private_key.pem -o StrictHostKeyChecking=no "$jar_file" $EC2_USERNAME@$EC2_HOST:/home/$EC2_USERNAME/lucaus2025Server.jar
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST "
+            pgrep java | xargs -r kill -15
+            sleep 10
+            nohup java -jar /home/$EC2_USERNAME/lucaus2025Server.jar > app.log 2>&1 &
+          "
+          rm -f private_key.pem
