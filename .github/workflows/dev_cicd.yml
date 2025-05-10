@@ -28,19 +28,11 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build --stacktrace --info
 
-      - name: Deploy to EC2
+      - name: Upload .jar to S3
         env:
-          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
-          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
-          EC2_HOST: ${{ secrets.EC2_HOST }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ap-northeast-2
         run: |
-          echo "$EC2_SSH_KEY" > private_key.pem
-          chmod 600 private_key.pem
           jar_file=$(find build/libs -name '*.jar' ! -name '*plain.jar' | head -n 1)
-          scp -i private_key.pem -o StrictHostKeyChecking=no "$jar_file" $EC2_USERNAME@$EC2_HOST:/home/$EC2_USERNAME/lucaus2025Server.jar
-          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST "
-            pgrep java | xargs -r kill -15
-            sleep 10
-            nohup java -jar /home/$EC2_USERNAME/lucaus2025Server.jar > app.log 2>&1 &
-          "
-          rm -f private_key.pem
+          aws s3 cp "$jar_file" s3://lucaus-deploy-bucket/lucaus2025Server.jar --region $AWS_REGION
