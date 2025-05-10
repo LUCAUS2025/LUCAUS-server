@@ -53,9 +53,9 @@ public class RedisConfig {
 
         return RedisCacheManager.builder(jedisConnectionFactory())
                 .withCacheConfiguration("short_1min", oneMinuteCache)
-                .withCacheConfiguration("detail_5min", fiveMinutesCache)
+                .withCacheConfiguration("notice_detail_10min", tenMinutesCache)
+                .withCacheConfiguration("notice_list_10min", tenMinutesCache)
                 .withCacheConfiguration("lost_10min", tenMinutesCache)
-                .withCacheConfiguration("detail_1hour", oneHourCache)
                 .build();
     }
 }
