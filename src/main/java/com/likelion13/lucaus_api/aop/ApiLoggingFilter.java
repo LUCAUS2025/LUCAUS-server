@@ -23,7 +23,7 @@ import java.util.Map;
 @Component
 public class ApiLoggingFilter implements Filter {
 
-    private static final String LOG_FILE = System.getProperty("user.home") + "/app.log";
+    private static final String LOG_FILE = "/home/ubuntu/app-error.log";
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
