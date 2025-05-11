@@ -19,7 +19,7 @@ import java.util.Map;
 @Component
 public class ApiErrorLoggingFilter implements Filter {
 
-    private static final String ERROR_LOG_FILE = System.getProperty("user.home") + "/app-error.log";
+    private static final String ERROR_LOG_FILE = "/home/ubuntu/app-error.log";
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
