@@ -45,6 +45,8 @@ public class DetailedNotices {
         this.photoUrl = photoUrl;
     }
 
+    public void changeuploadDateTime(LocalDateTime uploadDateTime){this.uploadDateTime=uploadDateTime;}
+
 
 
 }
