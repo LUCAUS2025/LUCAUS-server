@@ -105,6 +105,18 @@ public class NotionService {
     }
 
     private ShortNoticeDto mapToShortNoticeDto(JSONObject page) {
+        String uploadDateTimeString = page.optString("created_time");
+
+        LocalDateTime createdTime = null;
+        if (uploadDateTimeString != null && !uploadDateTimeString.isEmpty()) {
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+                createdTime = LocalDateTime.parse(uploadDateTimeString, formatter);
+            } catch (Exception e) {
+                logger.error("Failed to parse created_time: {}", uploadDateTimeString, e);
+            }
+        }
+
         JSONObject properties = page.optJSONObject("properties");
 
         JSONObject visibility = properties.optJSONObject("노출 여부");
@@ -120,26 +132,6 @@ public class NotionService {
                         .optString("content");
             }
         }
-
-        LocalDateTime createdTime = null;
-        JSONObject timeObj = properties.optJSONObject("등록 일시");
-
-        if (timeObj != null) {
-            JSONObject dateObj = timeObj.optJSONObject("date");
-            if (dateObj != null) {
-                String startDateStr = dateObj.optString("start");
-
-                if (startDateStr != null && !startDateStr.isEmpty()) {
-                    try {
-                        LocalDate date = LocalDate.parse(startDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                        createdTime = date.atStartOfDay();
-                    } catch (Exception e) {
-                        logger.error("Failed to parse 등록 일시: {}", startDateStr, e);
-                    }
-                }
-            }
-        }
-
         String notionId = page.optString("id");
 
         return ShortNoticeDto.builder()
@@ -152,19 +144,29 @@ public class NotionService {
 
 
     private DetailedNoticeDto mapToDetailedNoticeDto(JSONObject page) {
-        String uploadDateTimeString = page.optString("created_time");
+
+        JSONObject properties = page.optJSONObject("properties");
 
         LocalDateTime uploadDateTime = null;
-        if (uploadDateTimeString != null && !uploadDateTimeString.isEmpty()) {
-            try {
-                DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-                uploadDateTime = LocalDateTime.parse(uploadDateTimeString, formatter);
-            } catch (Exception e) {
-                logger.error("Failed to parse created_time: {}", uploadDateTimeString, e);
+        JSONObject timeObj = properties.optJSONObject("등록 일시");
+
+        if (timeObj != null) {
+            JSONObject dateObj = timeObj.optJSONObject("date");
+            if (dateObj != null) {
+                String startDateStr = dateObj.optString("start");
+
+                if (startDateStr != null && !startDateStr.isEmpty()) {
+                    try {
+                        LocalDate date = LocalDate.parse(startDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                        uploadDateTime = date.atStartOfDay();
+                    } catch (Exception e) {
+                        logger.error("Failed to parse 등록 일시: {}", startDateStr, e);
+                    }
+                }
             }
         }
 
-        JSONObject properties = page.optJSONObject("properties");
+
         String category = null;
         if (properties != null) {
             JSONObject categoryObj = properties.optJSONObject("카테고리");
@@ -427,6 +429,7 @@ public class NotionService {
                 detailedNoticesEntity.changeContent(detailedNoticeDto.getContent());
                 detailedNoticesEntity.changePhotoUrl(detailedNoticeDto.getPhotoUrl());
                 detailedNoticesEntity.changeNotionPhotoUrl(detailedNoticeDto.getNotionPhotoUrl());
+                detailedNoticesEntity.changeuploadDateTime(detailedNoticeDto.getUploadDateTime());
             } else {
                 detailedNoticesEntity = DetailedNotices.builder()
                         .category(detailedNoticeDto.getCategory())
