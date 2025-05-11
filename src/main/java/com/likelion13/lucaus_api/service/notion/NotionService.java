@@ -166,8 +166,6 @@ public class NotionService {
             }
         }
 
-        System.out.println("등록 일시");
-        System.out.println(uploadDateTime);
 
         String category = null;
         if (properties != null) {
