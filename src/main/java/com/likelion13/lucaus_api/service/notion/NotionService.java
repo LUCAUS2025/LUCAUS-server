@@ -411,8 +411,8 @@ public class NotionService {
 
 
     // DetailedNotice 데이터를 주기적으로 가져오는 메서드
-//    @Scheduled(cron = "0 */10 * * * *")
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 */10 * * * *")
+//    @Scheduled(cron = "0 * * * * *")
     public void fetchDetailedNotices() {
 
         List<DetailedNoticeDto> detailedNotices = fetchNotionDataFromDatabaseId(notionConfig.getDetailedNoticesDbId(), DetailedNoticeDto.class);
