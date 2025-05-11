@@ -381,7 +381,7 @@ public class NotionService {
 
     //     ShortNotice 데이터를 주기적으로 가져오는 메서드
 
-//    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 * * * * *")
     public void fetchShortNotices() {
         List<ShortNoticeDto> shortNotices = fetchNotionDataFromDatabaseId(notionConfig.getShortNoticesDbId(), ShortNoticeDto.class);
 
