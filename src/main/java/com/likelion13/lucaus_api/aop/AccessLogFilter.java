@@ -23,6 +23,13 @@ public class AccessLogFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        String uri = request.getRequestURI();
+
+        if (uri.equals("/actuator/health")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         long start = System.currentTimeMillis();
         filterChain.doFilter(request, response);
         long duration = System.currentTimeMillis() - start;
