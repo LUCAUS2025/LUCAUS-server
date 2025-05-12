@@ -15,11 +15,21 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class ApiErrorLoggingFilter implements Filter {
 
-    private static final String ERROR_LOG_FILE = "/home/ubuntu/app-error.log";
+    private static final String ERROR_LOG_FILE =
+            Optional.ofNullable(System.getProperty("error.log.file.path"))
+                    .orElseGet(() -> {
+                        String os = System.getProperty("os.name").toLowerCase();
+                        if (os.contains("linux")) {
+                            return "/home/ubuntu/app-error.log";
+                        } else {
+                            return System.getProperty("user.home") + "/app-error.log";
+                        }
+                    });
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
