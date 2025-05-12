@@ -25,7 +25,12 @@ public class AccessLogFilter extends OncePerRequestFilter {
 
         String uri = request.getRequestURI();
 
-        if (uri.equals("/actuator/health")) {
+        String userAgent = request.getHeader("User-Agent");
+
+        if ("/actuator/health".equals(uri) &&
+                userAgent != null &&
+                userAgent.contains("ELB-HealthChecker")) {
+
             filterChain.doFilter(request, response);
             return;
         }
