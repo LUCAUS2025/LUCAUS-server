@@ -4,13 +4,14 @@ import lombok.Getter;
 
 @Getter
 public enum BoothCategoryEnum {
-    GAME("게임"),
-    SOGAETING("소개팅"),
-    FOOD("음식"),
-    COUNCIL("총학생회"),
-    FUN("취미"),
-    STUDY("학술"),
-    SPORTS("운동");
+    SALE("물품 판매"),
+    CONCERT("소 연주회"),
+    FOOD_SALE("음식 판매"),
+    EVENT_GAME("이벤트 / 게임"),
+    EXHIBITION("전시회"),
+    EXPERIENCE("체험 / 홍보 / 모집"),
+    CAMPAIGN("캠페인"),
+    STUDENT_ACTIVITY("학생 교류 행사 및 학생회 사업");
 
     private final String koreanName;
 
