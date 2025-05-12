@@ -24,8 +24,13 @@ public class AccessLogFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String uri = request.getRequestURI();
+        String ip = request.getRemoteAddr();
+        String method = request.getMethod();
+        String userAgent = request.getHeader("User-Agent");
 
-        if (uri.equals("/actuator/health")) {
+        if ("/actuator/health".equals(uri) &&
+                userAgent != null &&
+                userAgent.contains("ELB-HealthChecker")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -34,13 +39,8 @@ public class AccessLogFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
         long duration = System.currentTimeMillis() - start;
 
-        String log = String.format("[%s] IP=%s METHOD=%s URI=%s STATUS=%d TIME=%dms%n",
-                LocalDateTime.now(),
-                request.getRemoteAddr(),
-                request.getMethod(),
-                request.getRequestURI(),
-                response.getStatus(),
-                duration);
+        String log = String.format("[%s] IP=%s METHOD=%s URI=%s STATUS=%d TIME=%dms UA=%s%n",
+                LocalDateTime.now(), ip, method, uri, response.getStatus(), duration, userAgent);
 
         try (FileWriter fw = new FileWriter(LOG_FILE, true)) {
             fw.write(log);
