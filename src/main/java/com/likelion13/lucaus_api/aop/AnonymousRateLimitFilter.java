@@ -59,8 +59,8 @@ public class AnonymousRateLimitFilter extends OncePerRequestFilter {
         }
 
         if (count > limit) {
+            redisTemplate.expire(rateKey, Duration.ofSeconds(windowSeconds));
             Boolean alreadyAlerted = redisTemplate.hasKey(alertKey);
-
             if (Boolean.FALSE.equals(alreadyAlerted)) {
                 try {
                     sendSlackAlert(request, fpid, count);
@@ -99,7 +99,7 @@ public class AnonymousRateLimitFilter extends OncePerRequestFilter {
     private void sendSlackAlert(HttpServletRequest request, String fpid, Long count) {
         try {
             String message = String.format(
-                    "*🚨 과도한 개인 요청 차단 알림*\n" +
+                    "* 📱과도한 개인 요청 차단 알림*\n" +
                             "- IP: `%s`\n" +
                             "- FPID: `%s`\n" +
                             "- URI: `%s`\n" +
