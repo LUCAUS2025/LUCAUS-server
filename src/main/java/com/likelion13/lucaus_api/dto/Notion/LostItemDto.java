@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 public class LostItemDto {
     private LocalDateTime updatedDateTime;
+    private LocalDateTime createdDateTime;
     private String notionId;
     private String place;
     private String name;
