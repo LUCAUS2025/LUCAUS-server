@@ -91,7 +91,7 @@ public class AnonymousRateLimitFilter extends OncePerRequestFilter {
         Cookie cookie = new Cookie("FPID", uuid);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
-        cookie.setMaxAge(60 * 60 * 24 * 7); // 7일
+        cookie.setMaxAge(60 * 60 * 24 * 7);
         response.addCookie(cookie);
         return uuid;
     }
