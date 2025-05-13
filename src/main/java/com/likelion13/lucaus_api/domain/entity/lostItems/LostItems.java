@@ -16,6 +16,7 @@ public class LostItems {
     private Long id;
     private String notionId;
     private LocalDateTime updatedDateTime;
+    private LocalDateTime createdDateTime;
     private String place;
     private String name;
     private String photoUrl;

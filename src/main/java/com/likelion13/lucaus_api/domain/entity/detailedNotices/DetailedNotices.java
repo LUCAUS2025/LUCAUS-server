@@ -24,6 +24,7 @@ public class DetailedNotices {
     private String photoUrl;
     private String notionPhotoUrl;
     private LocalDateTime uploadDateTime;
+    private LocalDateTime createdDateTime;
 
     public void changeCategory(String category) {
         this.category = category;
