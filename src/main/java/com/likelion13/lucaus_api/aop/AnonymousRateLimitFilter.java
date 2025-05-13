@@ -79,6 +79,7 @@ public class AnonymousRateLimitFilter extends OncePerRequestFilter {
     }
 
     private String getOrCreateFpid(HttpServletRequest request, HttpServletResponse response) {
+        // 기존 쿠키가 있는지 확인
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
                 if ("FPID".equals(cookie.getName())) {
@@ -87,12 +88,16 @@ public class AnonymousRateLimitFilter extends OncePerRequestFilter {
             }
         }
 
+        // 새 FPID 생성
         String uuid = UUID.randomUUID().toString();
-        Cookie cookie = new Cookie("FPID", uuid);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(60 * 60 * 24 * 7);
-        response.addCookie(cookie);
+
+        // 수동 Set-Cookie 헤더 설정으로 SameSite=None까지 명시
+        String cookieValue = String.format(
+                "FPID=%s; Path=/; Max-Age=604800; HttpOnly; Secure; SameSite=None; Domain=.lucaus.info",
+                uuid
+        );
+        response.setHeader("Set-Cookie", cookieValue);
+
         return uuid;
     }
 
