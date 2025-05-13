@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.StringRedisTemplate;
+
 import java.time.Duration;
 
 @Configuration
@@ -58,4 +60,10 @@ public class RedisConfig {
                 .withCacheConfiguration("lost_10min", tenMinutesCache)
                 .build();
     }
+
+    @Bean
+    public StringRedisTemplate stringRedisTemplate(JedisConnectionFactory jedisConnectionFactory) {
+        return new StringRedisTemplate(jedisConnectionFactory);
+    }
+
 }
