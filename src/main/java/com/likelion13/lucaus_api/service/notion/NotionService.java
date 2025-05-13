@@ -73,7 +73,7 @@ public class NotionService {
         headers.set("Authorization", "Bearer " + notionConfig.getApiKey());
         headers.set("Notion-Version", "2022-06-28");
         headers.set("Content-Type", "application/json");
-        HttpEntity<String> entity = new HttpEntity<>(headers);
+        HttpEntity<String> entity = new HttpEntity<>("{}", headers);
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
@@ -144,6 +144,18 @@ public class NotionService {
 
 
     private DetailedNoticeDto mapToDetailedNoticeDto(JSONObject page) {
+
+        String uploadDateTimeString = page.optString("created_time");
+
+        LocalDateTime createdTime = null;
+        if (uploadDateTimeString != null && !uploadDateTimeString.isEmpty()) {
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+                createdTime = LocalDateTime.parse(uploadDateTimeString, formatter);
+            } catch (Exception e) {
+                logger.error("Failed to parse created_time: {}", uploadDateTimeString, e);
+            }
+        }
 
         JSONObject properties = page.optJSONObject("properties");
 
@@ -256,10 +268,24 @@ public class NotionService {
                 .photoUrl(result.getSecond())
                 .notionPhotoUrl(result.getFirst())
                 .uploadDateTime(uploadDateTime)
+                .createdDateTime(createdTime)
                 .build();
     }
 
     private LostItemDto mapToLostItemDto(JSONObject page) {
+
+        String uploadDateTimeString = page.optString("created_time");
+
+        LocalDateTime createdTime = null;
+        if (uploadDateTimeString != null && !uploadDateTimeString.isEmpty()) {
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+                createdTime = LocalDateTime.parse(uploadDateTimeString, formatter);
+            } catch (Exception e) {
+                logger.error("Failed to parse created_time: {}", uploadDateTimeString, e);
+            }
+        }
+
         JSONObject properties = page.optJSONObject("properties");
 
         String notionId = page.optString("id");
@@ -376,6 +402,7 @@ public class NotionService {
                 .photoUrl(result.getSecond())
                 .ownerFound(ownerFound)
                 .name(name)
+                .createdDateTime(createdTime)
                 .notionPhotoUrl(result.getFirst())
                 .build();
     }
@@ -439,6 +466,7 @@ public class NotionService {
                         .notionId(detailedNoticeDto.getNotionId())
                         .notionPhotoUrl(detailedNoticeDto.getNotionPhotoUrl())
                         .uploadDateTime(detailedNoticeDto.getUploadDateTime())
+                        .createdDateTime(detailedNoticeDto.getCreatedDateTime())
                         .build();
             }
 
@@ -487,6 +515,7 @@ public class NotionService {
                         .category(categoryEnum)
                         .ownerFound(lostItemDto.isOwnerFound())
                         .notionId(lostItemDto.getNotionId())
+                        .createdDateTime(lostItemDto.getCreatedDateTime())
                         .build();
             }
             lostItemsRepository.save(lostItemEntity);
@@ -506,7 +535,7 @@ public class NotionService {
                     notionPhotoUrl = existingNotionPhotoUrl;
                     photoUrl = existingLostItem.getPhotoUrl();
                 } else {
-                    if (existingLostItem.getUpdatedDateTime().plusHours(1).isAfter(LocalDateTime.now())) {
+                    if (existingLostItem.getCreatedDateTime().plusHours(1).isAfter(LocalDateTime.now())) {
                         try {
                             photoUrl = s3Service.downloadAndUploadImage(notionPhotoUrl, "lost");
                             if (notionPhotoUrl != null && notionPhotoUrl.length() > 200) {
@@ -532,7 +561,7 @@ public class NotionService {
                     notionPhotoUrl = existingNotionPhotoUrl;
                     photoUrl = existingDetailedNotice.getPhotoUrl();
                 } else {
-                    if (existingDetailedNotice.getUploadDateTime().plusHours(1).isAfter(LocalDateTime.now())) {
+                    if (existingDetailedNotice.getCreatedDateTime().plusHours(1).isAfter(LocalDateTime.now())) {
                         try {
                             photoUrl = s3Service.downloadAndUploadImage(notionPhotoUrl, "notice");
                             if (notionPhotoUrl != null && notionPhotoUrl.length() > 200) {
