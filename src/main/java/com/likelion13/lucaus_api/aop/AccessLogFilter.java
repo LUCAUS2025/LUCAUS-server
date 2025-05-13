@@ -24,7 +24,13 @@ public class AccessLogFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String uri = request.getRequestURI();
-        String ip = request.getRemoteAddr();
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null) ip = request.getRemoteAddr(); // fallback
+
+        // 여러 IP가 있을 경우 앞에 거만 사용
+        if (ip != null && ip.contains(",")) {
+            ip = ip.split(",")[0].trim();
+        }
         String method = request.getMethod();
         String userAgent = request.getHeader("User-Agent");
 
