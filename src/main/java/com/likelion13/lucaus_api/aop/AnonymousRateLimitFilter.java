@@ -19,11 +19,8 @@ public class AnonymousRateLimitFilter extends OncePerRequestFilter {
 
     private final StringRedisTemplate redisTemplate;
 
-    @Value("${ratelimit.limit:100}")
+    @Value("${ratelimit.limit:50}")
     private int limit;
-
-    @Value("${ratelimit.windowSeconds:7200}")
-    private int windowSeconds;
 
     @Value("${slack.webhook.url}")
     private String slackWebhookUrl;
@@ -51,27 +48,38 @@ public class AnonymousRateLimitFilter extends OncePerRequestFilter {
 
         String fpid = getOrCreateFpid(request, response);
         String rateKey = "ratelimit:" + fpid;
+        String blockKey = "ratelimit:block:" + fpid;
         String alertKey = "slackalerted:" + fpid;
 
+        // 이미 차단된 상태인지 확인
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(blockKey))) {
+            response.setStatus(429);
+            response.getWriter().write("Too many requests (FPID - Blocked)");
+            return;
+        }
+
+        // 5분 카운트 증가
         Long count = redisTemplate.opsForValue().increment(rateKey);
         if (count == 1) {
-            redisTemplate.expire(rateKey, Duration.ofSeconds(windowSeconds));
+            redisTemplate.expire(rateKey, Duration.ofSeconds(10));
         }
 
         if (count > limit) {
-            redisTemplate.expire(rateKey, Duration.ofSeconds(windowSeconds));
+            // 2시간 차단
+            redisTemplate.opsForValue().set(blockKey, "1", Duration.ofHours(2));
+
             Boolean alreadyAlerted = redisTemplate.hasKey(alertKey);
             if (Boolean.FALSE.equals(alreadyAlerted)) {
                 try {
                     sendSlackAlert(request, fpid, count);
-                    redisTemplate.opsForValue().set(alertKey, "1", Duration.ofSeconds(windowSeconds));
+                    redisTemplate.opsForValue().set(alertKey, "1", Duration.ofHours(2));
                 } catch (Exception e) {
                     System.err.println("Slack 전송 실패: " + e.getMessage());
                 }
             }
 
             response.setStatus(429);
-            response.getWriter().write("Too many requests (FPID)");
+            response.getWriter().write("Too many requests (FPID - Blocked)");
             return;
         }
 
@@ -79,7 +87,7 @@ public class AnonymousRateLimitFilter extends OncePerRequestFilter {
     }
 
     private String getOrCreateFpid(HttpServletRequest request, HttpServletResponse response) {
-        // 기존 쿠키가 있는지 확인
+        // 기존 쿠키 확인
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
                 if ("FPID".equals(cookie.getName())) {
@@ -91,7 +99,7 @@ public class AnonymousRateLimitFilter extends OncePerRequestFilter {
         // 새 FPID 생성
         String uuid = UUID.randomUUID().toString();
 
-        // 수동 Set-Cookie 헤더 설정으로 SameSite=None까지 명시
+        // Set-Cookie 수동 설정 (SameSite=None 포함)
         String cookieValue = String.format(
                 "FPID=%s; Path=/; Max-Age=604800; HttpOnly; Secure; SameSite=None; Domain=.lucaus.info",
                 uuid
