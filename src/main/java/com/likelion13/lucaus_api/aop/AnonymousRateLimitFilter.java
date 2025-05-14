@@ -38,7 +38,6 @@ public class AnonymousRateLimitFilter extends OncePerRequestFilter {
         String uri = request.getRequestURI();
         String userAgent = request.getHeader("User-Agent");
 
-        // ALB 헬스체크 우회
         if ("/actuator/health".equals(uri) &&
                 userAgent != null &&
                 userAgent.contains("ELB-HealthChecker")) {
@@ -51,14 +50,12 @@ public class AnonymousRateLimitFilter extends OncePerRequestFilter {
         String blockKey = "ratelimit:block:" + fpid;
         String alertKey = "slackalerted:" + fpid;
 
-        // 이미 차단된 상태인지 확인
         if (Boolean.TRUE.equals(redisTemplate.hasKey(blockKey))) {
             response.setStatus(429);
             response.getWriter().write("Too many requests (FPID - Blocked)");
             return;
         }
 
-        // 5분 카운트 증가
         Long count = redisTemplate.opsForValue().increment(rateKey);
         if (count == 1) {
             redisTemplate.expire(rateKey, Duration.ofSeconds(10));
@@ -96,7 +93,6 @@ public class AnonymousRateLimitFilter extends OncePerRequestFilter {
             }
         }
 
-        // 새 FPID 생성
         String uuid = UUID.randomUUID().toString();
 
         // Set-Cookie 수동 설정 (SameSite=None 포함)
