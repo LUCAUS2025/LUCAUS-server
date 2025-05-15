@@ -7,6 +7,7 @@ import com.likelion13.lucaus_api.domain.repository.lostItems.LostItemsRepository
 import com.likelion13.lucaus_api.dto.response.LostItemsResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -65,7 +66,7 @@ public class LostItemsService {
             throw new GeneralHandler(ErrorCode.INVALID_PAGE_SIZE);
         }
 
-        Pageable pageable = PageRequest.of(page - 1, size);
+        Pageable sortedPageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdDateTime"));
 
         LocalDate parsedDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
         LocalDateTime startOfDay = parsedDate.atStartOfDay();
@@ -74,7 +75,7 @@ public class LostItemsService {
 
         Page<LostItems> lostItemsPage;
         if ("TOTAL".equalsIgnoreCase(category)) {
-            lostItemsPage = lostItemsRepository.findByUpdatedDateTimeGreaterThanEqualAndUpdatedDateTimeLessThanAndOwnerFoundFalse(startOfDay, endOfDay, pageable);
+            lostItemsPage = lostItemsRepository.findByUpdatedDateTimeGreaterThanEqualAndUpdatedDateTimeLessThanAndOwnerFoundFalse(startOfDay, endOfDay, sortedPageable);
         } else {
             Category categoryEnum;
             try {
@@ -83,7 +84,7 @@ public class LostItemsService {
                 throw new IllegalArgumentException("Invalid category: " + category);
             }
 
-            lostItemsPage = lostItemsRepository.findByCategoryAndUpdatedDateTimeGreaterThanEqualAndUpdatedDateTimeLessThanAndOwnerFoundFalse(categoryEnum, startOfDay, endOfDay, pageable);
+            lostItemsPage = lostItemsRepository.findByCategoryAndUpdatedDateTimeGreaterThanEqualAndUpdatedDateTimeLessThanAndOwnerFoundFalse(categoryEnum, startOfDay, endOfDay, sortedPageable);
         }
 
         return lostItemsPage.map(lostItem -> {
