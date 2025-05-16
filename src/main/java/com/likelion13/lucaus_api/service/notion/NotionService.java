@@ -322,7 +322,7 @@ public class NotionService {
         }
 
         String place = null;
-        JSONObject placeObj = properties.optJSONObject("습득장소");
+        JSONObject placeObj = properties.optJSONObject("수령장소");
         if (placeObj != null) {
             JSONArray richTextArray = placeObj.optJSONArray("rich_text");
             if (richTextArray != null && richTextArray.length() > 0) {
@@ -476,8 +476,8 @@ public class NotionService {
 
 
     // LostItem 데이터를 주기적으로 가져오는 메서드
-//@Scheduled(cron = "0 * * * * *")
-@Scheduled(cron = "0 */10 * * * *")
+@Scheduled(cron = "0 * * * * *")
+//@Scheduled(cron = "0 */10 * * * *")
     public void fetchLostItems() {
         List<LostItemDto> lostItems = fetchNotionDataFromDatabaseId(notionConfig.getLostItemsDbId(), LostItemDto.class);
 
