@@ -322,7 +322,7 @@ public class NotionService {
         }
 
         String place = null;
-        JSONObject placeObj = properties.optJSONObject("습득장소");
+        JSONObject placeObj = properties.optJSONObject("수령장소");
         if (placeObj != null) {
             JSONArray richTextArray = placeObj.optJSONArray("rich_text");
             if (richTextArray != null && richTextArray.length() > 0) {
