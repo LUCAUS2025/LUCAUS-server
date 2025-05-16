@@ -35,7 +35,11 @@ public class DetailedNoticesService {
             throw new GeneralHandler(ErrorCode.INVALID_PAGE_SIZE);
         }
 
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "uploadDateTime"));
+        Pageable pageable = PageRequest.of(
+                page - 1,
+                size,
+                Sort.by(Sort.Order.desc("uploadDateTime"), Sort.Order.desc("createdDateTime"))
+        );
         Page<DetailedNotices> noticesPage = detailedNoticesRepository.findAll(pageable);
 
 
