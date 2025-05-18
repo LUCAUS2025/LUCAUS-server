@@ -38,6 +38,8 @@ public class BoothDetailServiceImpl implements BoothDetailService {
             String info = (String) row[4];
             String cover = (String) row[5];
             String location = (String) row[6];
+            Integer opTimeStart = (Integer) row[7];
+            Integer opTimeEnd = (Integer) row[8];
 
             // 카테고리 조회
             List<String> categories = boothDetailRepository.findBoothCategoriesByBoothId(boothId);
@@ -68,7 +70,9 @@ public class BoothDetailServiceImpl implements BoothDetailService {
                     categories,
                     boothReviewList,
                     boothId,
-                    opDateList
+                    opDateList,
+                    opTimeStart,
+                    opTimeEnd
             );
         }).collect(Collectors.toList());
     }

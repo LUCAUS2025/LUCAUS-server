@@ -19,7 +19,9 @@ public interface BoothDetailRepository extends JpaRepository<Booth, Long> {
            b.owner AS owner,
            b.info AS info,
            b.cover AS cover,
-           o.location AS location
+           o.location AS location,
+           o.op_time_start AS opTimeStart,
+           o.op_time_end AS opTimeEnd
     FROM op_date_booth o
     JOIN booth b ON o.booth_id = b.id
     WHERE o.op_date = :opDate AND o.day_booth_num = :dayBoothNum
