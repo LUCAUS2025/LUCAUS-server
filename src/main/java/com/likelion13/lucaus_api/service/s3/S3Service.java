@@ -36,6 +36,9 @@ public class S3Service {
     @Value("${aws.region}")
     private String region;
 
+    @Value("${cloudfront.domainName}")
+    private String cloudfrontDomainName;
+
     private final S3Client s3Client;
 
     public S3Service(@Qualifier("s3Client") S3Client s3Client) {
@@ -70,6 +73,6 @@ public class S3Service {
     }
 
     private String generateS3Url(String objectKey) {
-        return String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region, objectKey);
+        return String.format("https://%s/%s", cloudfrontDomainName, objectKey);
     }
 }
