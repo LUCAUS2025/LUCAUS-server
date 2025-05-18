@@ -160,7 +160,7 @@ public class NotionService {
         JSONObject properties = page.optJSONObject("properties");
 
         LocalDateTime uploadDateTime = null;
-        JSONObject timeObj = properties.optJSONObject("등록 일시");
+        JSONObject timeObj = properties.optJSONObject("등록 일자");
 
         if (timeObj != null) {
             JSONObject dateObj = timeObj.optJSONObject("date");
@@ -172,7 +172,7 @@ public class NotionService {
                         LocalDate date = LocalDate.parse(startDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                         uploadDateTime = date.atStartOfDay();
                     } catch (Exception e) {
-                        logger.error("Failed to parse 등록 일시: {}", startDateStr, e);
+                        logger.error("Failed to parse 등록 일자: {}", startDateStr, e);
                     }
                 }
             }
