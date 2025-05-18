@@ -20,8 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -535,7 +534,13 @@ public class NotionService {
                     notionPhotoUrl = existingNotionPhotoUrl;
                     photoUrl = existingLostItem.getPhotoUrl();
                 } else {
-                    if (existingLostItem.getCreatedDateTime().plusHours(1).isAfter(LocalDateTime.now())) {
+
+                    LocalDateTime createdUtc = existingLostItem.getCreatedDateTime();
+                    ZonedDateTime createdKst = createdUtc.atZone(ZoneId.of("UTC"))
+                            .withZoneSameInstant(ZoneId.of("Asia/Seoul"));
+                    ZonedDateTime nowKst = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+
+                    if (createdKst.plusHours(1).isAfter(nowKst)){
                         try {
                             photoUrl = s3Service.downloadAndUploadImage(notionPhotoUrl, "lost");
                             if (notionPhotoUrl != null && notionPhotoUrl.length() > 200) {
@@ -560,8 +565,14 @@ public class NotionService {
                         existingNotionPhotoUrl.substring(0, 200).equals(notionPhotoUrl.substring(0, 200))) {
                     notionPhotoUrl = existingNotionPhotoUrl;
                     photoUrl = existingDetailedNotice.getPhotoUrl();
+
                 } else {
-                    if (existingDetailedNotice.getCreatedDateTime().plusHours(1).isAfter(LocalDateTime.now())) {
+                    LocalDateTime createdUtc = existingDetailedNotice.getCreatedDateTime();
+                    ZonedDateTime createdKst = createdUtc.atZone(ZoneId.of("UTC"))
+                            .withZoneSameInstant(ZoneId.of("Asia/Seoul"));
+                    ZonedDateTime nowKst = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+
+                    if (createdKst.plusHours(1).isAfter(nowKst)){
                         try {
                             photoUrl = s3Service.downloadAndUploadImage(notionPhotoUrl, "notice");
                             if (notionPhotoUrl != null && notionPhotoUrl.length() > 200) {
