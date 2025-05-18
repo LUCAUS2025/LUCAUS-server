@@ -33,7 +33,7 @@ public class BoothDetailResponseDto {
 
     private List<Integer> opDateList; // 운영일자 리스트
 
-    //private Integer opTimeStart; // 운영시작시간 - 안줌
+    private Integer opTimeStart; // 운영시작시간
 
-    //private Integer opTimeEnd; // 운영마감시간 - 안줌
+    private Integer opTimeEnd; // 운영마감시간
 }

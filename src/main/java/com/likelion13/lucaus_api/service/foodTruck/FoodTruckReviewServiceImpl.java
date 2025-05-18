@@ -26,9 +26,9 @@ public class FoodTruckReviewServiceImpl implements FoodTruckReviewService {
     public String postFoodTruckReview(Long foodTruckId, FoodTruckReviewRequestDto reviewRequest) {
 
         // 리뷰 달 수 없는 시간
-//        if (!isValidTime()) {
-//            throw new GeneralHandler(ErrorCode.INVALID_REVIEW_TIME);
-//        }
+        if (!isValidTime()) {
+            throw new GeneralHandler(ErrorCode.INVALID_REVIEW_TIME);
+        }
 
         FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId).orElse(null);
 
@@ -59,7 +59,7 @@ public class FoodTruckReviewServiceImpl implements FoodTruckReviewService {
         DayOfWeek currentDay = now.getDayOfWeek();
 
         LocalTime start = LocalTime.of(10, 0); // 시작 시간: 오전 10시
-        LocalTime end = LocalTime.of(18, 0); //
+        LocalTime end = LocalTime.of(19, 0); //
 
         return switch (currentDay) {
             case MONDAY, TUESDAY, WEDNESDAY ,THURSDAY,FRIDAY -> currentTime.isAfter(start) && currentTime.isBefore(end);
