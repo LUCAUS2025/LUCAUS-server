@@ -35,6 +35,13 @@ public class AnonymousRateLimitFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        //부하 테스트용 우회 코드
+        if (limit <= 0) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+
         String uri = request.getRequestURI();
         String userAgent = request.getHeader("User-Agent");
 
