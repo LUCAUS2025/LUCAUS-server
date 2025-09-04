@@ -62,6 +62,7 @@
 ## Architecture
 
 <br>
+<img width="2182" height="1960" alt="루카우스 drawio" src="https://github.com/user-attachments/assets/37af9c83-7818-40f2-81ef-8b261d9343ef" />
 
 <hr></hr>
 
