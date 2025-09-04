@@ -135,6 +135,8 @@ server/
 <hr></hr>
 
 ## ERD
+<img width="765" height="549" alt="스크린샷 2025-09-04 오후 5 22 34" src="https://github.com/user-attachments/assets/29b64910-5c02-4204-b532-8fb13d2b7c28" />
+<img width="1082" height="816" alt="스크린샷 2025-09-04 오후 5 22 15" src="https://github.com/user-attachments/assets/90bf1376-dc83-4039-acea-2513eefb2f10" />
 
 
 <hr></hr>
