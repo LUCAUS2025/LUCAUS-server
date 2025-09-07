@@ -22,7 +22,6 @@
 - 공지사항, 분실물, 도장판, 부스/푸드트럭 운영 정보 등 **REST API** 제공  
 - **Notion 기반 CMS** 연동으로 실시간 콘텐츠 관리   
 - **Redis 캐시** 및 **Navite Query** 를 활용한 성능 최적화  
-- **API 로그 수집 및 응답 코드 표준화**  
 - **AWS 기반 인프라 배포** 및 **GitHub Actions 기반 CI/CD 자동화**  
 
 ---
@@ -107,8 +106,8 @@
 ### CI/CD 및 보안 자동화
 
 - `GitHub Actions`를 통해 CI/CD 파이프라인을 구성하여, **코드 변경 시 자동 배포**가 이루어집니다.
-- **IP 차단 시스템 (`auto_ip_blocker_waf.py`)**은 비정상 요청이 감지되면 WAF에 자동으로 IP를 등록하여 차단합니다.
-- Slack 알림(`server_event_slack.py`)을 통해 운영자에게 주요 이벤트 알림을 전달합니다.
+- **IP 차단 시스템**은 비정상 요청이 감지되면 WAF에 자동으로 IP를 등록하여 차단합니다.
+- Slack 알림을 통해 운영자에게 주요 이벤트 알림을 전달합니다.
 
 ---
 
@@ -158,8 +157,7 @@
 
 ## 폴더 구조
 
-<details>
-<summary>📁 server/ 폴더 구조</summary>
+<summary> server/ 폴더 구조</summary>
 
 <pre><code>
 ├── .github/                  # GitHub 이슈/PR 템플릿 & Actions 설정
@@ -187,8 +185,6 @@
 └── README.md
 </code></pre>
 
-</details>
-
 ---
 
 ## ERD
@@ -212,49 +208,56 @@
 
 ## Branch Convention
 
-- `main` : 프로덕트를 배포하는 브랜치입니다.
-- `dev`: 프로덕트 배포 전 기능을 개발하는 브랜치입니다.
-- `feat`: 단위 기능을 개발하는 브랜치로 단위 기능 개발이 완료되면 develop 브랜치에 merge 합니다.
-- `hotfix`: main 브랜치로 프로덕트가 배포 된 이후 이슈가 발생했을 때 이를 긴급하게 해결하는 브랜치입니다.
+이 프로젝트는 기능 단위 개발 → dev 브랜치 통합 → main 배포 흐름을 따릅니다. 브랜치 네이밍 컨벤션은 다음과 같습니다:
 
-EX: 
+| 브랜치 타입    | 용도 |
+|----------------|------|
+| `main`         | 실제 운영 배포용 브랜치입니다. |
+| `dev`          | 기능 브랜치들이 통합되는 개발 브랜치입니다. |
+| `feat/*`       | 새로운 기능을 개발할 때 사용하는 브랜치입니다. 개발 완료 후 `dev` 브랜치에 merge 됩니다. |
+| `fix/*`        | 버그나 기능 보완 작업 시 사용하는 브랜치입니다. |
+| `hot-fix/*`    | 운영 중인 `main` 브랜치에 직접 영향을 주는 긴급 수정 사항에 사용됩니다. |
+| `setting/*`    | 설정 관련 디렉토리 구조/CI 구성 등을 위한 브랜치입니다. |
+| `docs/*`       | 문서 작업용 브랜치입니다. |
+| `chore/*`      | 빌드, 패키지 등 유지보수용 브랜치입니다. |
+| `test/*`       | 테스트 목적의 브랜치입니다. |
 
-<hr></hr>
+---
 
 ## Commit Convetion
-- **feat** : 새로운 기능 구현 `feat: 구글 로그인 API 기능 구현 - #11`
-- **fix** : 코드 오류 수정 `fix: 회원가입 비즈니스 로직 오류 수정 (#10)`
-- **del** : 불필요한 코드 삭제 `del: 불필요한 import 제거 (#12)`
-- **docs** : README나 wiki 등의 문서 개정 `docs: 리드미 수정 (#14)`
-- **refactor** : 내부 로직은 변경 하지 않고 기존의 코드를 개선하는 리팩터링 `refactor: 코드 로직 개선 (#15)`
-- **chore** : 의존성 추가, yml 추가와 수정, 패키지 구조 변경, 파일 이동 등의 작업 `chore: yml 수정 (#21)`, `chore: lombok 의존성 추가 (#22)`
-- **test**: 테스트 코드 작성, 수정 `test: 로그인 API 테스트 코드 작성 (#20)`
-- **setting**: 세팅
-- **merge**: 머지
 
-EX: [feat] 로그인 기능 구현
+| 타입       | 설명                                                                 | 예시 |
+|------------|----------------------------------------------------------------------|------|
+| `feat`     | 새로운 기능 구현                                                      | `feat: 구글 로그인 API 기능 구현 - #11` |
+| `fix`      | 코드 오류 수정                                                       | `fix: 회원가입 비즈니스 로직 오류 수정 (#10)` |
+| `del`      | 불필요한 코드 삭제                                                   | `del: 불필요한 import 제거 (#12)` |
+| `docs`     | 문서 작성 또는 수정 (`README`, `wiki`, etc.)                         | `docs: 리드미 수정 (#14)` |
+| `refactor` | 기능 변경 없이 코드 리팩토링 (성능 개선, 가독성 향상 등)             | `refactor: 코드 로직 개선 (#15)` |
+| `chore`    | 빌드 설정, 패키지 매니저, yml 설정 등 변경                            | `chore: yml 수정 (#21)`<br>`chore: lombok 의존성 추가 (#22)` |
+| `test`     | 테스트 코드 추가 및 수정                                              | `test: 로그인 API 테스트 코드 작성 (#20)` |
+| `setting`  | 프로젝트 초기 세팅, 환경설정 파일 추가 등                            | `setting: 프로젝트 초기 세팅` |
+| `merge`    | 브랜치 병합 커밋 (주로 conflict 해결 시)                              | `merge: dev 브랜치 병합` |
 
-<br>
-
-<hr></hr>
-
+---
 
 ## Teck Stack ✨
 
-| 항목                 | 사용 기술                                |
-| ------------------ | ------------------------------------ |
-| **IDE**            | IntelliJ IDEA                        |
-| **Language**       | Java 17                              |
-| **Framework**      | Spring Boot 3.3.1, Gradle            |
-| **ORM**            | Spring Data JPA                      |
-| **Database**       | MySQL (AWS RDS)                      |
-| **Authentication** | Spring Security, JWT (jjwt)          |
-| **Cache**          | Redis (Spring Cache + Jedis)         |
-| **Infra**          | AWS EC2, AWS RDS                     |
-| **CI/CD**          | GitHub Actions                       |
-| **API Docs**       | Swagger (springdoc-openapi), Notion  |
-| **External Libs**  | AWS SDK (S3), Lombok, Validation API |
-| **Tools**          | Postman, Figma, Discord              |
-
+| 항목                 | 사용 기술 및 설명                                                                 |
+|----------------------|------------------------------------------------------------------------------|
+| **IDE**              | IntelliJ IDEA                                                                |
+| **Language**         | Java 17                                                                      |
+| **Framework**        | Spring Boot 3.3.1, Gradle                                                    |
+| **ORM**              | Spring Data JPA, Native Query              |
+| **Database**         | MySQL (AWS RDS)                                                              |
+| **Authentication**   | Spring Security, JWT (jjwt)                                                  |
+| **Cache**            | Redis (Spring Cache + Jedis)                                                 |
+| **Infra**            | AWS EC2 (오토스케일링 구성), AWS RDS, Amazon CloudFront (CDN 적용)           |
+| **WAF**              | Python 기반 WAF 시스템 (로그 분석 및 차단 자동화 스크립트 활용)     |
+| **Monitoring**       | Slack Webhook 연동 (서버 이벤트 및 차단 알림 전송), CloudWatch Logs           |
+| **Task Scheduler**   | Crontab을 활용한 로그 정기 업로드 및 분석 스크립트 자동 실행              |
+| **CI/CD**            | GitHub Actions                                                               |
+| **API Docs**         | Swagger (springdoc-openapi), Notion                  |
+| **External Libs**    | AWS SDK (S3 업로드용), Lombok, Validation API                                 |
+| **Tools**            | Postman, Figma, Discord, slack |
 
 <br>
