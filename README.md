@@ -1,16 +1,31 @@
-# LUCAUS-server
-![2025 LUCAUS 로고 초안_0326](https://github.com/user-attachments/assets/d5f2f5c8-0f7d-4c61-9d46-4b3828b957c4)
+# LUCAUS2025 (server)
+<div align="center">
+  <img width="1372" height="569" alt="LUCAUS" src="https://github.com/user-attachments/assets/22f1f1fa-f7c9-4095-860b-4a31bb738188" />
+</div>
 
+## Summary
 
-<br>
+**2025년 중앙대학교 봄 축제**를 위한 공식 웹사이트의 **백엔드**입니다.  
+ 축제 운영에 필요한 다양한 서비스들을 통합하여 **정보 제공**, **방문자 참여**, **데이터 분석**을 원활하게 지원하도록 설계되었습니다.
 
-## 설명
-<aside>
-중앙대 2025 봄 축제 LUCAUS 웹사이트의 서버입니다.
-</aside>
+---
 
-<br/><br/>
+### 프로젝트 목적
 
+- 축제 참여자에게 **실시간 안내** 및 **편리한 정보 접근** 제공
+- 운영팀을 위한 **로깅, 트래픽 대응, 통계 수집** 기반 마련
+  
+---
+
+### 핵심 기능
+
+- 공지사항, 분실물, 도장판, 부스/푸드트럭 운영 정보 등 **REST API** 제공  
+- **Notion 기반 CMS** 연동으로 실시간 콘텐츠 관리   
+- **Redis 캐시** 및 **Navite Query** 를 활용한 성능 최적화  
+- **API 로그 수집 및 응답 코드 표준화**  
+- **AWS 기반 인프라 배포** 및 **GitHub Actions 기반 CI/CD 자동화**  
+
+---
 ## Contributors ✨
 
 <div align=center>
@@ -46,9 +61,9 @@
     </td>
     <td>
       <ul align="left">
-        <li>부스 API</li>
-        <li>도장판 API</li>
-        <li>로그인 기능 구현</li>
+        <li>부스/푸드트럭/광장기획전 API</li>
+        <li>로그 수집 및 데이터 분석용 파이프라인 설계</li>
+        <li>응답 코드 체계 설계 및 커스텀 예외 처리</li>
         <li>CI/CD 구축</li>
       </ul>
     </td>
@@ -56,90 +71,144 @@
 </table>
 
 </div>
-<hr></hr>
 
-
+---
 ## Architecture
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/37af9c83-7818-40f2-81ef-8b261d9343ef" alt="Infrastructure Diagram" width="700" />
+</p>
 
-<br>
-<img width="2182" height="1960" alt="루카우스 drawio" src="https://github.com/user-attachments/assets/37af9c83-7818-40f2-81ef-8b261d9343ef" />
+### 클라이언트 요청 처리 흐름
 
-<hr></hr>
+1. **클라이언트**는 `Route 53`을 통해 도메인 이름으로 서버에 접근합니다.
+2. `AWS Certificate Manager`는 HTTPS 연결을 위한 SSL 인증서를 제공합니다.
+3. `AWS WAF`(Web Application Firewall)는 **악의적인 IP 차단**, **비정상 요청 필터링** 등의 보안 기능을 수행합니다.
+4. `Elastic Load Balancing`은 여러 `EC2 인스턴스`로 트래픽을 분산시켜 **부하 분산 및 장애 대응**을 수행합니다.
 
-## 📁 폴더 구조
+---
 
-**주요 디렉토리 설명:**
-- **aop/**: 로깅, 접근 제한, 실행 시간 측정 등 횡단 관심사 처리
-- **common/**: 전역 설정, 예외 처리, API 응답 형식 등 공통 기능
-- **controller/**: REST API 엔드포인트 정의 (부스, 분실물, 공지사항, 도장판 등)
-- **domain/**: 데이터베이스 엔티티와 Repository 인터페이스
-- **dto/**: 클라이언트와 서버 간 데이터 전송을 위한 객체
-- **security/**: JWT 기반 인증 및 보안 처리
-- **service/**: 핵심 비즈니스 로직 구현
-```
-server/
-├── .github/ # GitHub 템플릿 및 CI/CD 설정
-│ ├── ISSUE_TEMPLATE/ # 이슈 템플릿
-│ ├── workflows/ # GitHub Actions 워크플로우
-│ └── PULL_REQUEST_TEMPLATE.md # PR 템플릿
-├── gradle/ # Gradle Wrapper 파일
+### 서버 및 스케일링 구성
+
+- **EC2 인스턴스**에 Spring Boot 백엔드 서버와 Redis 캐시 서버가 실행됩니다.
+- `AWS Auto Scaling`이 서버의 부하를 모니터링하고, **트래픽 증가 시 인스턴스를 자동으로 확장**합니다.
+- `AWS RDS`를 통해 MySQL 기반의 안정적인 관계형 DB를 제공합니다.
+
+---
+
+### 로깅 및 모니터링 파이프라인
+
+- `AWS CloudWatch`는 서버 로그, API 응답 시간, 에러 발생 등을 모니터링합니다.
+- 로그는 `AWS S3`에 주기적으로 저장됩니다 (`crontab + shell script` 기반 자동 업로드).
+- 저장된 로그는 `Amazon EventBridge`를 통해 이벤트 기반으로 처리됩니다.
+- **이상 징후 탐지 시 `AWS Lambda`가 Slack 알림을 발송**해 운영팀에 실시간 공유합니다.
+
+---
+
+### CI/CD 및 보안 자동화
+
+- `GitHub Actions`를 통해 CI/CD 파이프라인을 구성하여, **코드 변경 시 자동 배포**가 이루어집니다.
+- **IP 차단 시스템 (`auto_ip_blocker_waf.py`)**은 비정상 요청이 감지되면 WAF에 자동으로 IP를 등록하여 차단합니다.
+- Slack 알림(`server_event_slack.py`)을 통해 운영자에게 주요 이벤트 알림을 전달합니다.
+
+---
+
+## 운영 자동화 및 보안 기능
+
+### IP 자동 차단 시스템
+- 일정 시간 내 다량 요청(IP 기준)이 감지되면 해당 IP를 자동 차단
+- Spring 서버 로그를 실시간 분석하여 공격/오류 패턴 탐지
+- `Blacklist`를 관리하여 악성 IP의 접근을 선제적으로 차단
+- 교내 IP의 경우 `WhiteList`로 관리하여 접근 허용
+
+---
+
+### API 로그 수집 및 주기적 업로드
+- 쉘 스크립트를 통해 API 로그를 정기적으로 AWS S3에 업로드
+- 요청/응답 로그 기반 사용자 행동 분석 및 성능 모니터링 기반 마련
+
+---
+
+### 주기적 작업 스케줄링 (Crontab)
+- `crontab` 등록을 통해 자동 IP 차단 및 로그 업로드 스크립트 주기 실행
+- 시스템 상태 점검 및 로그 누락 방지를 위한 자동화 설정
+
+---
+
+### 장애 및 이벤트 모니터링 (Slack 연동)
+- 주요 서버 이벤트 발생 시 Slack 채널로 실시간 전송
+- IP 차단, 로그 업로드 실패, 시스템 에러 등 운영팀 실시간 대응 가능
+
+---
+
+### 고가용성 및 오토스케일링 인프라
+- EC2 오토스케일링 그룹 구성으로 트래픽 증가 시 인스턴스 자동 추가
+- 정적 리소스는 S3 + CloudFront(CDN)를 통해 빠르고 안정적으로 제공
+- 로깅 및 차단 기능은 모든 인스턴스에서 병렬로 작동 가능
+
+---
+
+### 기술 스택 활용 포인트
+
+- **Spring Boot 3 + JPA + MySQL**로 안정적인 데이터 처리  
+- **AWS EC2 / RDS / S3 + Redis** 기반 운영 환경 구축  
+- **Swagger 기반 API 문서 자동화**로 협업 및 테스트 용이  
+- **로그 기반 유저 행동 분석 파이프라인 설계**  
+
+---
+
+## 폴더 구조
+
+<details>
+<summary>📁 server/ 폴더 구조</summary>
+
+<pre><code>
+├── .github/                  # GitHub 이슈/PR 템플릿 & Actions 설정
+│   ├── ISSUE_TEMPLATE/
+│   ├── workflows/
+│   └── PULL_REQUEST_TEMPLATE.md
+├── gradle/                   # Gradle Wrapper 관련 파일
 ├── src/
-│ ├── main/
-│ │ ├── java/com/likelion13/lucaus_api/
-│ │ │ ├── aop/ # AOP 관련 클래스 (로깅, 필터링)
-│ │ │ ├── common/ # 공통 설정 및 유틸리티
-│ │ │ │ ├── config/ # 설정 클래스 (Security, Redis, S3, Swagger 등)
-│ │ │ │ ├── exception/ # 예외 처리 관련
-│ │ │ │ ├── response/ # API 응답 형식
-│ │ │ │ └── util/ # 유틸리티 클래스
-│ │ │ ├── controller/ # REST API 컨트롤러
-│ │ │ ├── domain/ # 도메인 계층
-│ │ │ │ ├── entity/ # JPA 엔티티
-│ │ │ │ │ ├── booth/ # 부스 관련 엔티티
-│ │ │ │ │ ├── detailedNotices/ # 상세 공지사항 엔티티
-│ │ │ │ │ ├── foodTruck/ # 푸드트럭 관련 엔티티
-│ │ │ │ │ ├── lostItems/ # 분실물 엔티티
-│ │ │ │ │ ├── shortNotices/ # 간단 공지사항 엔티티
-│ │ │ │ │ ├── stamp/ # 도장판 관련 엔티티
-│ │ │ │ │ └── visitor/ # 방문자 수 엔티티
-│ │ │ │ └── repository/ # JPA Repository 인터페이스
-│ │ │ ├── dto/ # 데이터 전송 객체
-│ │ │ │ ├── Notion/ # Notion API 연동 DTO
-│ │ │ │ ├── request/ # 요청 DTO
-│ │ │ │ └── response/ # 응답 DTO
-│ │ │ ├── enums/ # 열거형 클래스
-│ │ │ ├── security/ # JWT 인증 관련
-│ │ │ ├── service/ # 비즈니스 로직 서비스
-│ │ │ │ ├── auth/ # 인증 서비스
-│ │ │ │ ├── booth/ # 부스 서비스
-│ │ │ │ ├── detailedNotices/ # 상세 공지사항 서비스
-│ │ │ │ ├── foodTruck/ # 푸드트럭 서비스
-│ │ │ │ ├── lostItems/ # 분실물 서비스
-│ │ │ │ ├── notion/ # Notion 연동 서비스
-│ │ │ │ ├── s3/ # AWS S3 서비스
-│ │ │ │ ├── shortNotices/ # 간단 공지사항 서비스
-│ │ │ │ ├── stamp/ # 도장판 서비스
-│ │ │ │ ├── user/ # 사용자 서비스
-│ │ │ │ └── visitor/ # 방문자 수 서비스
-│ │ │ └── LucausApiApplication.java # 메인 애플리케이션 클래스
-│ │ └── resources/
-│ │ └── application.yml # 애플리케이션 설정 파일
-│ └── test/ # 테스트 코드
-├── build.gradle # Gradle 빌드 설정
-├── gradlew # Gradle Wrapper (Unix/Linux)
-├── gradlew.bat # Gradle Wrapper (Windows)
-├── README.md # 프로젝트 문서
-└── settings.gradle # Gradle 프로젝트 설정
-```
+│   ├── main/
+│   │   ├── java/com/likelion13/lucaus_api/
+│   │   │   ├── aop/              # AOP (로깅, 필터링 등)
+│   │   │   ├── common/           # 설정, 예외, 응답, 유틸 등 공통 모듈
+│   │   │   ├── controller/       # REST API 컨트롤러
+│   │   │   ├── domain/           # Entity 및 Repository
+│   │   │   ├── dto/              # Request/Response DTO
+│   │   │   ├── enums/            # 열거형 상수
+│   │   │   ├── security/         # JWT 기반 인증 처리
+│   │   │   └── service/          # 비즈니스 로직
+│   │   └── resources/
+│   │       └── application.yml  # 설정 파일
+│   └── test/                   # 테스트 코드
+├── build.gradle
+├── gradlew / gradlew.bat
+├── settings.gradle
+└── README.md
+</code></pre>
 
-<hr></hr>
+</details>
+
+---
 
 ## ERD
-<img width="765" height="549" alt="스크린샷 2025-09-04 오후 5 22 34" src="https://github.com/user-attachments/assets/29b64910-5c02-4204-b532-8fb13d2b7c28" />
-<img width="1082" height="816" alt="스크린샷 2025-09-04 오후 5 22 15" src="https://github.com/user-attachments/assets/90bf1376-dc83-4039-acea-2513eefb2f10" />
 
+<table>
+  <tr>
+    <td align="center"><b>메인 엔티티</b></td>
+    <td align="center"><b>광장기획전 엔티티</b></td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/90bf1376-dc83-4039-acea-2513eefb2f10" width="500" />
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/29b64910-5c02-4204-b532-8fb13d2b7c28" width="500" />
+    </td>
+  </tr>
+</table>
 
-<hr></hr>
+---
 
 ## Branch Convention
 
